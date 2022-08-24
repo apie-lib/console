@@ -2,6 +2,7 @@
 namespace Apie\Console\Commands;
 
 use Apie\Common\ApieFacadeAction;
+use Apie\Common\ContextConstants;
 use Apie\Core\BoundedContext\BoundedContext;
 use Apie\Core\Context\ApieContext;
 use ReflectionClass;
@@ -15,9 +16,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class ApieConsoleCommand extends Command
 {
-    protected static $defaultDescription = 'Creates resource.';
-
-    
     public function __construct(private readonly ApieFacadeAction $apieFacadeAction, private readonly ApieContext $apieContext, private readonly ReflectionClass $reflectionClass)
     {
         parent::__construct();
@@ -63,20 +61,27 @@ final class ApieConsoleCommand extends Command
 
     private function addInputOption(string $name, ReflectionParameter $parameter): void
     {
-        $flags = 0;
-        if (!$parameter->isOptional()) {
-            $flags |= InputOption::VALUE_REQUIRED;
-        }
+        $flags = $parameter->isOptional() ? InputOption::VALUE_OPTIONAL : InputOption::VALUE_REQUIRED;
         if ($parameter->isVariadic()) {
             $flags |= InputOption::VALUE_IS_ARRAY;
         }
 
-        $this->addOption(
-            'input-' . $name,
-            null,
-            $flags,
-            'provide ' . $name . ' value'
-        );
+        if ($parameter->isDefaultValueAvailable()) {
+            $this->addOption(
+                'input-' . $name,
+                null,
+                $flags,
+                'provide ' . $name . ' value',
+                $parameter->getDefaultValue()
+            );
+        } else {
+            $this->addOption(
+                'input-' . $name,
+                null,
+                $flags,
+                'provide ' . $name . ' value'
+            );
+        }
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -84,13 +89,32 @@ final class ApieConsoleCommand extends Command
         $rawContents = [];
         foreach ($input->getOptions() as $optionName => $optionValue) {
             if (str_starts_with($optionName, 'input-')) {
-                $rawContents[substr($optionName, strlen('input-'))] = $optionValue;
+                if ($optionValue === null) {
+                    continue;
+                }
+                $data = json_decode($optionValue, true);
+                if ($optionValue === null || json_last_error()) {
+                    $rawContents[substr($optionName, strlen('input-'))] = $optionValue;
+                } else {
+                    $rawContents[substr($optionName, strlen('input-'))] = $data;
+                }
             }
         }
-        $response = ($this->apieFacadeAction)($this->apieContext, $rawContents);
+        if ($output->isDebug()) {
+            $output->writeln("<info>This will be the resource data to create the object:</info>");
+            $output->writeln(json_encode($rawContents, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+        }
+        
+        $apieContext = $this->apieContext->withContext(ContextConstants::RESOURCE_NAME, $this->reflectionClass->name);
+        $response = ($this->apieFacadeAction)($apieContext, $rawContents);
         if (isset($response->resource)) {
+            $output->writeln("<info>Resource was successfully created.</info>");
             return Command::SUCCESS;
         };
+        $output->writeln('<error>' . $response->error->getMessage() . '</error>');
+        if ($output->isDebug()) {
+            $output->writeln('<error>' . $response->error->getTraceAsString() . '</error>');
+        }
         return Command::FAILURE;
     }
 }

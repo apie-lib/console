@@ -3,6 +3,7 @@ namespace Apie\Console;
 
 use Apie\Common\Actions\CreateObjectAction;
 use Apie\Common\ApieFacade;
+use Apie\Common\ContextConstants;
 use Apie\Console\Commands\ApieConsoleCommand;
 use Apie\Console\Lists\ConsoleCommandList;
 use Apie\Core\BoundedContext\BoundedContext;
@@ -23,11 +24,12 @@ class ConsoleCommandFactory
         $postContext = $apieContext->withContext(RequestMethod::class, RequestMethod::POST)
             ->withContext(ConsoleCommand::class, ConsoleCommand::CONSOLE_COMMAND)
             ->withContext(ConsoleCommand::CONSOLE_COMMAND->value, true)
+            ->withContext(ContextConstants::BOUNDED_CONTEXT_ID, $boundedContext->getId())
             ->registerInstance($boundedContext);
 
         $action = new CreateObjectAction($this->apieFacade);
         foreach ($boundedContext->resources->filterOnApieContext($postContext) as $resource) {
-            $commands = new ApieConsoleCommand($action, $postContext, $resource);
+            $commands[] = new ApieConsoleCommand($action, $postContext, $resource);
         }
         return new ConsoleCommandList($commands);
     }
