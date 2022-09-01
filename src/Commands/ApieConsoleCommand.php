@@ -1,8 +1,8 @@
 <?php
 namespace Apie\Console\Commands;
 
-use Apie\Common\ApieFacadeAction;
 use Apie\Common\ContextConstants;
+use Apie\Core\Actions\ActionInterface;
 use Apie\Core\BoundedContext\BoundedContext;
 use Apie\Core\Context\ApieContext;
 use ReflectionClass;
@@ -16,7 +16,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class ApieConsoleCommand extends Command
 {
-    public function __construct(private readonly ApieFacadeAction $apieFacadeAction, private readonly ApieContext $apieContext, private readonly ReflectionClass $reflectionClass)
+    public function __construct(private readonly ActionInterface $apieFacadeAction, private readonly ApieContext $apieContext, private readonly ReflectionClass $reflectionClass)
     {
         parent::__construct();
     }
