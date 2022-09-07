@@ -1,0 +1,37 @@
+{
+  "name": "apie/console",
+  "description": "Composer package of the apie library: console",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Pieter Jordaan",
+      "email": "pieter_jordaan@hotmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Apie\\Console\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Apie\\Tests\\Console\\": "tests/"
+    }
+  },
+  "require": {
+    "php": ">=8.1",
+    "apie/common": "self.version",
+    "apie/core": "self.version",
+    "symfony/console": "6.*"
+  },
+  "require-dev": {
+    "apie/composite-value-objects": "self.version",
+    "apie/fixtures": "self.version",
+    "apie/text-value-objects": "self.version",
+    "phpunit/phpunit": "^9.5",
+    "phpspec/prophecy-phpunit": "^2.0"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
