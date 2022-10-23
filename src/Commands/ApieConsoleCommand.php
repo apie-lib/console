@@ -5,6 +5,7 @@ use Apie\Common\ContextConstants;
 use Apie\Core\Actions\ActionInterface;
 use Apie\Core\BoundedContext\BoundedContext;
 use Apie\Core\Context\ApieContext;
+use Apie\Core\Entities\EntityInterface;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionParameter;
@@ -16,8 +17,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class ApieConsoleCommand extends Command
 {
-    public function __construct(private readonly ActionInterface $apieFacadeAction, private readonly ApieContext $apieContext, private readonly ReflectionClass $reflectionClass)
-    {
+    /**
+     * @param ReflectionClass<EntityInterface> $reflectionClass
+     */
+    public function __construct(
+        private readonly ActionInterface $apieFacadeAction,
+        private readonly ApieContext $apieContext,
+        private readonly ReflectionClass $reflectionClass
+    ) {
         parent::__construct();
     }
 
@@ -52,7 +59,7 @@ final class ApieConsoleCommand extends Command
                     'input-' . $key,
                     null,
                     $setter->hasDefaultValue() ? InputOption::VALUE_OPTIONAL : 0,
-                    'provide ' . $parameter->getName() . ' value',
+                    'provide ' . $setter->getName() . ' value',
                     $setter->getDefaultValue()
                 );
             }
@@ -93,7 +100,7 @@ final class ApieConsoleCommand extends Command
                     continue;
                 }
                 $data = json_decode($optionValue, true);
-                if ($optionValue === null || json_last_error()) {
+                if (json_last_error()) {
                     $rawContents[substr($optionName, strlen('input-'))] = $optionValue;
                 } else {
                     $rawContents[substr($optionName, strlen('input-'))] = $data;
