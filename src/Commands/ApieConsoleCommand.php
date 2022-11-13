@@ -6,6 +6,9 @@ use Apie\Core\Actions\ActionInterface;
 use Apie\Core\BoundedContext\BoundedContext;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Entities\EntityInterface;
+use Apie\Core\Metadata\Fields\FieldInterface;
+use Apie\Core\Metadata\Fields\FieldWithPossibleDefaultValue;
+use Apie\Core\Metadata\MetadataFactory;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionParameter;
@@ -36,50 +39,32 @@ final class ApieConsoleCommand extends Command
         $this->setName('apie:' . ($boundedContext ? $boundedContext->getId() : 'unknown') . ':create-' . $this->reflectionClass->getShortName());
         $this->setHelp('This command allows you to create a ' . $this->reflectionClass->getShortName() .  ' instance');
         
-        $constructor = $this->reflectionClass->getConstructor();
-        $names = [];
-        if ($constructor) {
-            foreach ($constructor->getParameters() as $parameter) {
-                $this->addInputOption($parameter->getName(), $parameter);
-                $names[$parameter->getName()] = true;
-            }
-        }
-
-        foreach ($this->apieContext->getApplicableSetters($this->reflectionClass) as $key => $setter) {
-            if (isset($names[$key])) {
-                continue;
-            }
-            if ($setter instanceof ReflectionMethod) {
-                $parameters = $setter->getParameters();
-                $lastParameter = end($parameters);
-                $this->addInputOption($key, $lastParameter);
-            }
-            if ($setter instanceof ReflectionProperty) {
-                $this->addOption(
-                    'input-' . $key,
-                    null,
-                    $setter->hasDefaultValue() ? InputOption::VALUE_OPTIONAL : 0,
-                    'provide ' . $setter->getName() . ' value',
-                    $setter->getDefaultValue()
-                );
-            }
+        $metadata = MetadataFactory::getCreationMetadata(
+            $this->reflectionClass,
+            $this->apieContext
+        );
+        foreach ($metadata->getHashmap() as $fieldName => $field) {
+            $this->addInputOption($fieldName, $field);
         }
     }
 
-    private function addInputOption(string $name, ReflectionParameter $parameter): void
+    private function addInputOption(string $name, FieldInterface $field): void
     {
-        $flags = $parameter->isOptional() ? InputOption::VALUE_OPTIONAL : InputOption::VALUE_REQUIRED;
-        if ($parameter->isVariadic()) {
-            $flags |= InputOption::VALUE_IS_ARRAY;
+        if (!$field->isField()) {
+            return;
         }
+        $flags = $field->isRequired() ? InputOption::VALUE_REQUIRED : InputOption::VALUE_OPTIONAL;
+        //if ($parameter->isVariadic()) {
+        //    $flags |= InputOption::VALUE_IS_ARRAY;
+        //}
 
-        if ($parameter->isDefaultValueAvailable()) {
+        if ($field instanceof FieldWithPossibleDefaultValue && $field->hasDefaultValue()) {
             $this->addOption(
                 'input-' . $name,
                 null,
                 $flags,
                 'provide ' . $name . ' value',
-                $parameter->getDefaultValue()
+                $field->getDefaultValue()
             );
         } else {
             $this->addOption(

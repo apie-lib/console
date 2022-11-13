@@ -28,7 +28,7 @@ class ConsoleCommandFactory
             ->registerInstance($boundedContext);
 
         $action = new CreateObjectAction($this->apieFacade);
-        foreach ($boundedContext->resources->filterOnApieContext($postContext) as $resource) {
+        foreach ($boundedContext->resources->filterOnApieContext($postContext, false) as $resource) {
             $commands[] = new ApieConsoleCommand($action, $postContext, $resource);
         }
         return new ConsoleCommandList($commands);
