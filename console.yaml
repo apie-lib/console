@@ -1,0 +1,13 @@
+services:
+  Apie\Console\ConsoleCommandFactory:
+    arguments:
+      - '@Apie\Common\ApieFacade'
+  Apie\ApieBundle\Wrappers\ConsoleCommandFactory:
+    arguments:
+      - '@Apie\Console\ConsoleCommandFactory'
+      - '@Apie\Core\ContextBuilders\ContextBuilderFactory'
+      - '@Apie\Core\BoundedContext\BoundedContextHashmap'
+
+  apie.console.factory:
+    alias: Apie\ApieBundle\Wrappers\ConsoleCommandFactory
+    public: true
