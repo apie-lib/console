@@ -33,7 +33,7 @@ class ConsoleServiceProvider extends ServiceProvider
                 );
             }
         );
-        $this->app->bind(\Apie\ApieBundle\Wrappers\ConsoleCommandFactory::class, 'apie.console.factory');
+        $this->app->bind('apie.console.factory', \Apie\ApieBundle\Wrappers\ConsoleCommandFactory::class);
         
         
     }
