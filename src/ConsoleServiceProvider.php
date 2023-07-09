@@ -7,7 +7,6 @@ use Illuminate\Support\ServiceProvider;
 /**
  * This file is generated with apie/service-provider-generator from file: console.yaml
  * @codecoverageIgnore
- * @phpstan-ignore
  */
 class ConsoleServiceProvider extends ServiceProvider
 {
