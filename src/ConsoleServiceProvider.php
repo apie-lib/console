@@ -22,18 +22,6 @@ class ConsoleServiceProvider extends ServiceProvider
                 );
             }
         );
-        $this->app->singleton(
-            \Apie\ApieBundle\Wrappers\ConsoleCommandFactory::class,
-            function ($app) {
-                return new \Apie\ApieBundle\Wrappers\ConsoleCommandFactory(
-                    $app->make(\Apie\Console\ConsoleCommandFactory::class),
-                    $app->make(\Apie\Core\ContextBuilders\ContextBuilderFactory::class),
-                    $app->make(\Apie\Core\BoundedContext\BoundedContextHashmap::class)
-                );
-            }
-        );
-        $this->app->bind('apie.console.factory', \Apie\ApieBundle\Wrappers\ConsoleCommandFactory::class);
-        
         
     }
 }
