@@ -1,6 +1,7 @@
 <?php
 namespace Apie\Tests\Console;
 
+use Apie\Common\ActionDefinitionProvider;
 use Apie\Common\Actions\CreateObjectAction;
 use Apie\Common\Tests\Concerns\ProvidesApieFacade;
 use Apie\Console\ConsoleCommandFactory;
@@ -21,7 +22,10 @@ class ConsoleCommandFactoryTest extends TestCase
     {
         $boundedContext = BoundedContextFactory::createExample();
         $apieContext = new ApieContext([]);
-        $testItem = new ConsoleCommandFactory($this->givenAnApieFacade(CreateObjectAction::class));
+        $testItem = new ConsoleCommandFactory(
+            $this->givenAnApieFacade(CreateObjectAction::class),
+            new ActionDefinitionProvider
+        );
         $actual = $testItem->createForBoundedContext($boundedContext, $apieContext);
         $application = new Application();
         $application->setAutoExit(false);

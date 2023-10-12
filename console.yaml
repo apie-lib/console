@@ -12,3 +12,4 @@ services:
   Apie\Console\ConsoleCommandFactory:
     arguments:
       - '@Apie\Common\ApieFacade'
+      - '@Apie\Common\ActionDefinitionProvider'

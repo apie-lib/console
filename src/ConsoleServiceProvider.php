@@ -30,7 +30,8 @@ class ConsoleServiceProvider extends ServiceProvider
             \Apie\Console\ConsoleCommandFactory::class,
             function ($app) {
                 return new \Apie\Console\ConsoleCommandFactory(
-                    $app->make(\Apie\Common\ApieFacade::class)
+                    $app->make(\Apie\Common\ApieFacade::class),
+                    $app->make(\Apie\Common\ActionDefinitionProvider::class)
                 );
             }
         );
