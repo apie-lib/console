@@ -24,9 +24,9 @@ final class ApieInputHelper extends Helper
     }
 
     /**
-     * @param array<int, InputInteractorInterface> $additionalInteractors
+     * @param iterable<int, InputInteractorInterface> $additionalInteractors
      */
-    public static function create(array $additionalInteractors): self
+    public static function create(iterable $additionalInteractors): self
     {
         return new self(...[
             ...$additionalInteractors,
