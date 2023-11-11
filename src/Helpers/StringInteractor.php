@@ -6,6 +6,7 @@ use Apie\Core\Enums\ScalarType;
 use Apie\Core\Metadata\MetadataInterface;
 use Apie\Core\Metadata\ScalarMetadata;
 use Apie\Core\Metadata\ValueObjectMetadata;
+use Apie\Core\ValueObjects\IsPasswordValueObject;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
@@ -33,6 +34,9 @@ final class StringInteractor implements InputInteractorInterface
             $question->setValidator(function ($input) use ($metadata) {
                 return $metadata->toClass()->getMethod('fromNative')->invoke(null, $input)->toNative();
             });
+            if (in_array(IsPasswordValueObject::class, $metadata->toClass()->getTraits())) {
+                $question->setHidden(true);
+            }
         }
         return (string) $helper->ask($input, $output, $question);
     }
