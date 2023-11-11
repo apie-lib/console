@@ -30,15 +30,13 @@ class DefaultObjectInteractor implements InputInteractorInterface
     
         $result = [];
         foreach ($metadata->getHashmap() as $field => $fieldMeta) {
-            if ($fieldMeta instanceof SetterMethod) {
-                $output->writeln('Field: ' . $field);
-                // TODO indent with some IndentOutputDecorator?
-                $typehint = $fieldMeta->getTypehint();
-                if (!$typehint) {
-                    $typehint = ReflectionTypeFactory::createReflectionType('mixed');
-                }
-                $result[$field] = $apieInputHelper->interactUsingTypehint($typehint, $input, $output, $context);
+            $output->writeln('Field: ' . $field);
+            // TODO indent with some IndentOutputDecorator?
+            $typehint = $fieldMeta->getTypehint();
+            if (!$typehint) {
+                $typehint = ReflectionTypeFactory::createReflectionType('mixed');
             }
+            $result[$field] = $apieInputHelper->interactUsingTypehint($typehint, $input, $output, $context);
         }
         return $result;
     }
