@@ -7,6 +7,7 @@ use Apie\Console\Helpers\InputInteractorInterface;
 use Apie\Console\Helpers\NullInteractor;
 use Apie\Console\Helpers\NumberInteractor;
 use Apie\Console\Helpers\StringInteractor;
+use Apie\Console\Helpers\UnionInteractor;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Metadata\MetadataFactory;
 use Apie\Core\Metadata\MetadataInterface;
@@ -32,6 +33,7 @@ final class ApieInputHelper extends Helper
     {
         return new self(...[
             ...$additionalInteractors,
+            new UnionInteractor(),
             new StringInteractor(),
             new NullInteractor(),
             new NumberInteractor(),

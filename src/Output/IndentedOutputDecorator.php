@@ -6,7 +6,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class IndentedOutputDecorator implements OutputInterface
 {
-    private $indentation;
+    private string $indentation;
 
     public function __construct(
         private readonly OutputInterface $output,
@@ -15,19 +15,29 @@ class IndentedOutputDecorator implements OutputInterface
         $this->indentation = str_repeat(' ', $indent);
     }
 
-    public function write($messages, $newline = false, $options = 0): void
+    /**
+     * @param string|iterable<int, string> $messages
+     */
+    public function write(string|iterable $messages, bool $newline = false, int $options = 0): void
     {
         $indentedMessages = $this->indentMessages($messages);
         $this->output->write($indentedMessages, $newline, $options);
     }
 
-    public function writeln($messages, $options = 0): void
+    /**
+     * @param string|iterable<int, string> $messages
+     */
+    public function writeln(string|iterable $messages, int $options = 0): void
     {
         $indentedMessages = $this->indentMessages($messages);
         $this->output->writeln($indentedMessages, $options);
     }
 
-    private function indentMessages($messages)
+    /**
+     * @param string|iterable<int, string> $messages
+     * @return iterable<int, string>
+     */
+    private function indentMessages(string|iterable $messages): iterable
     {
         if (!is_array($messages)) {
             $messages = [$messages];

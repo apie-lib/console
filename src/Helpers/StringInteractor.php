@@ -34,7 +34,7 @@ final class StringInteractor implements InputInteractorInterface
             $question->setValidator(function ($input) use ($metadata) {
                 return $metadata->toClass()->getMethod('fromNative')->invoke(null, $input)->toNative();
             });
-            if (in_array(IsPasswordValueObject::class, $metadata->toClass()->getTraits())) {
+            if (in_array(IsPasswordValueObject::class, $metadata->toClass()->getTraitNames())) {
                 $question->setHidden(true);
             }
         }
