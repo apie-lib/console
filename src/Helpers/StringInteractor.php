@@ -29,7 +29,11 @@ final class StringInteractor implements InputInteractorInterface
         $helper = $helperSet->get('question');
         assert($helper instanceof QuestionHelper);
         $question = new Question('Please enter the value of this field');
-
+        if ($metadata instanceof ValueObjectMetadata) {
+            $question->setValidator(function ($input) use ($metadata) {
+                $metadata->toClass()->getMethod('fromNative')->invoke(null, $input);
+            });
+        }
         return (string) $helper->ask($input, $output, $question);
     }
 }

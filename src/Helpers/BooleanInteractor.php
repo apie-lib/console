@@ -28,7 +28,12 @@ final class BooleanInteractor implements InputInteractorInterface
     ): mixed {
         $helper = $helperSet->get('question');
         assert($helper instanceof QuestionHelper);
-        $userQuestion = new ConfirmationQuestion('On? (yes/no): ');
-        return $helper->ask($input, $output, $userQuestion);
+        $question = new ConfirmationQuestion('On? (yes/no): ');
+        if ($metadata instanceof ValueObjectMetadata) {
+            $question->setValidator(function ($input) use ($metadata) {
+                $metadata->toClass()->getMethod('fromNative')->invoke(null, $input);
+            });
+        }
+        return $helper->ask($input, $output, $question);
     }
 }

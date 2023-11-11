@@ -37,7 +37,7 @@ final class ApieConsoleCommand extends Command
             : null;
         $this->setName('apie:' . ($boundedContext ? $boundedContext->getId() : 'unknown') . ':create-' . $this->reflectionClass->getShortName());
         $this->setHelp('This command allows you to create a ' . $this->reflectionClass->getShortName() .  ' instance');
-        $this->addOption('interactive', 'i', InputOption::VALUE_NEGATABLE, 'Fill in the fields interactively', false);
+        $this->addOption('interactive', 'i', InputOption::VALUE_NEGATABLE, 'Fill in the fields interactively');
         $metadata = MetadataFactory::getCreationMetadata(
             $this->reflectionClass,
             $this->apieContext
