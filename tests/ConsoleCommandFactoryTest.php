@@ -4,6 +4,7 @@ namespace Apie\Tests\Console;
 use Apie\Common\ActionDefinitionProvider;
 use Apie\Common\Actions\CreateObjectAction;
 use Apie\Common\Tests\Concerns\ProvidesApieFacade;
+use Apie\Console\ApieInputHelper;
 use Apie\Console\ConsoleCommandFactory;
 use Apie\Core\Context\ApieContext;
 use Apie\Fixtures\BoundedContextFactory;
@@ -24,7 +25,8 @@ class ConsoleCommandFactoryTest extends TestCase
         $apieContext = new ApieContext([]);
         $testItem = new ConsoleCommandFactory(
             $this->givenAnApieFacade(CreateObjectAction::class),
-            new ActionDefinitionProvider
+            new ActionDefinitionProvider,
+            new ApieInputHelper()
         );
         $actual = $testItem->createForBoundedContext($boundedContext, $apieContext);
         $application = new Application();

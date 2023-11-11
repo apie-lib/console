@@ -17,7 +17,8 @@ class ConsoleCommandFactory
 {
     public function __construct(
         private readonly ApieFacade $apieFacade,
-        private readonly ActionDefinitionProvider $actionDefinitionProvider
+        private readonly ActionDefinitionProvider $actionDefinitionProvider,
+        private readonly ApieInputHelper $apieInputHelper
     ) {
     }
 
@@ -36,7 +37,7 @@ class ConsoleCommandFactory
                 $resourceName = $actionDefinition->getResourceName();
             }
             if ($action !== null) {
-                $commands[] = new ApieConsoleCommand($action, $apieContext, $resourceName);
+                $commands[] = new ApieConsoleCommand($action, $apieContext, $resourceName, $this->apieInputHelper);
             }
         }
 

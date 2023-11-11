@@ -13,6 +13,7 @@ services:
     arguments:
       - '@Apie\Common\ApieFacade'
       - '@Apie\Common\ActionDefinitionProvider'
+      - '@Apie\Console\ApieInputHelper'
 
   Apie\Console\ApieInputHelper:
     factory: ['Apie\Console\ApieInputHelper', 'create']

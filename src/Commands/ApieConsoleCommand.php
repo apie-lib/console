@@ -24,7 +24,8 @@ final class ApieConsoleCommand extends Command
     public function __construct(
         private readonly ActionInterface $apieFacadeAction,
         private readonly ApieContext $apieContext,
-        private readonly ReflectionClass $reflectionClass
+        private readonly ReflectionClass $reflectionClass,
+        private readonly ApieInputHelper $apieInputHelper
     ) {
         parent::__construct();
     }
@@ -36,7 +37,7 @@ final class ApieConsoleCommand extends Command
             : null;
         $this->setName('apie:' . ($boundedContext ? $boundedContext->getId() : 'unknown') . ':create-' . $this->reflectionClass->getShortName());
         $this->setHelp('This command allows you to create a ' . $this->reflectionClass->getShortName() .  ' instance');
-        $this->addOption('interactive', 'i', InputOption::VALUE_OPTIONAL, 'Fill in the fields interactively', false);
+        $this->addOption('interactive', 'i', InputOption::VALUE_NEGATABLE, 'Fill in the fields interactively', false);
         $metadata = MetadataFactory::getCreationMetadata(
             $this->reflectionClass,
             $this->apieContext
@@ -92,9 +93,8 @@ final class ApieConsoleCommand extends Command
         }
         $apieContext = $this->apieContext->withContext(ContextConstants::RESOURCE_NAME, $this->reflectionClass->name);
         if ($input->getOption('interactive')) {
-            $apieInputHelper = $this->getHelper('apie');
-            assert($apieInputHelper instanceof ApieInputHelper);
-            $rawContents += $apieInputHelper->interactUsingMetadata(
+            $this->getHelperSet()->set($this->apieInputHelper);
+            $rawContents += $this->apieInputHelper->interactUsingMetadata(
                 MetadataFactory::getCreationMetadata(
                     $this->reflectionClass,
                     $this->apieContext
