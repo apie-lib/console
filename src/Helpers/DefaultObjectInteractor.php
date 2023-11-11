@@ -2,9 +2,9 @@
 namespace Apie\Console\Helpers;
 
 use Apie\Console\ApieInputHelper;
+use Apie\Console\Output\IndentedOutputDecorator;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Metadata\CompositeMetadata;
-use Apie\Core\Metadata\Fields\SetterMethod;
 use Apie\Core\Metadata\MetadataInterface;
 use Apie\TypeConverter\ReflectionTypeFactory;
 use Symfony\Component\Console\Helper\HelperSet;
@@ -36,7 +36,12 @@ class DefaultObjectInteractor implements InputInteractorInterface
             if (!$typehint) {
                 $typehint = ReflectionTypeFactory::createReflectionType('mixed');
             }
-            $result[$field] = $apieInputHelper->interactUsingTypehint($typehint, $input, $output, $context);
+            $result[$field] = $apieInputHelper->interactUsingTypehint(
+                $typehint,
+                $input,
+                new IndentedOutputDecorator($output, 4),
+                $context
+            );
         }
         return $result;
     }

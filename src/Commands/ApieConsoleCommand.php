@@ -107,7 +107,7 @@ final class ApieConsoleCommand extends Command
         if ($output->isDebug()) {
             $output->writeln("<info>This will be the resource data to create the object:</info>");
             $output->writeln(json_encode($rawContents, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
-        }    
+        }
         
         $response = ($this->apieFacadeAction)($apieContext, $rawContents);
         if (isset($response->resource)) {
