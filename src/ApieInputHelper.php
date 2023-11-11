@@ -4,6 +4,8 @@ namespace Apie\Console;
 use Apie\Console\Helpers\BooleanInteractor;
 use Apie\Console\Helpers\DefaultObjectInteractor;
 use Apie\Console\Helpers\InputInteractorInterface;
+use Apie\Console\Helpers\NullInteractor;
+use Apie\Console\Helpers\NumberInteractor;
 use Apie\Console\Helpers\StringInteractor;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Metadata\MetadataFactory;
@@ -30,8 +32,10 @@ final class ApieInputHelper extends Helper
     {
         return new self(...[
             ...$additionalInteractors,
-            new BooleanInteractor(),
             new StringInteractor(),
+            new NullInteractor(),
+            new NumberInteractor(),
+            new BooleanInteractor(),
             new DefaultObjectInteractor()
         ]);
     }

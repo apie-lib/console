@@ -37,7 +37,7 @@ final class ApieConsoleCommand extends Command
             : null;
         $this->setName('apie:' . ($boundedContext ? $boundedContext->getId() : 'unknown') . ':create-' . $this->reflectionClass->getShortName());
         $this->setHelp('This command allows you to create a ' . $this->reflectionClass->getShortName() .  ' instance');
-        $this->addOption('interactive', 'i', InputOption::VALUE_NEGATABLE, 'Fill in the fields interactively', true);
+        $this->addOption('interactive', 'i', InputOption::VALUE_NEGATABLE, 'Fill in the fields interactively');
         $metadata = MetadataFactory::getCreationMetadata(
             $this->reflectionClass,
             $this->apieContext
@@ -107,8 +107,7 @@ final class ApieConsoleCommand extends Command
         if ($output->isDebug()) {
             $output->writeln("<info>This will be the resource data to create the object:</info>");
             $output->writeln(json_encode($rawContents, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
-        }
-    
+        }    
         
         $response = ($this->apieFacadeAction)($apieContext, $rawContents);
         if (isset($response->resource)) {
