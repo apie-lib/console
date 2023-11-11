@@ -19,5 +19,5 @@ services:
     arguments:
       - !tagged_iterator Apie\Console\Helpers\InputInteractorInterface
     tags:
-      - name: console_helper
+      - name: console.helper
 
