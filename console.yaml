@@ -13,3 +13,11 @@ services:
     arguments:
       - '@Apie\Common\ApieFacade'
       - '@Apie\Common\ActionDefinitionProvider'
+
+  Apie\Console\ApieInputHelper:
+    factory: ['Apie\Console\ApieInputHelper', 'create']
+    arguments:
+      - !tagged_iterator Apie\Console\Helpers\InputInteractorInterface
+    tags:
+      - name: console_helper
+

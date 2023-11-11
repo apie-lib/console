@@ -2,6 +2,7 @@
 namespace Apie\Console\Commands;
 
 use Apie\Common\ContextConstants;
+use Apie\Console\ApieInputHelper;
 use Apie\Core\Actions\ActionInterface;
 use Apie\Core\BoundedContext\BoundedContext;
 use Apie\Core\Context\ApieContext;
@@ -35,7 +36,7 @@ final class ApieConsoleCommand extends Command
             : null;
         $this->setName('apie:' . ($boundedContext ? $boundedContext->getId() : 'unknown') . ':create-' . $this->reflectionClass->getShortName());
         $this->setHelp('This command allows you to create a ' . $this->reflectionClass->getShortName() .  ' instance');
-        
+        $this->addOption('interactive', 'i', InputOption::VALUE_OPTIONAL, 'Fill in the fields interactively', false);
         $metadata = MetadataFactory::getCreationMetadata(
             $this->reflectionClass,
             $this->apieContext
@@ -89,12 +90,26 @@ final class ApieConsoleCommand extends Command
                 }
             }
         }
+        $apieContext = $this->apieContext->withContext(ContextConstants::RESOURCE_NAME, $this->reflectionClass->name);
+        if ($input->getOption('interactive')) {
+            $apieInputHelper = $this->getHelper('apie');
+            assert($apieInputHelper instanceof ApieInputHelper);
+            $rawContents += $apieInputHelper->interactUsingMetadata(
+                MetadataFactory::getCreationMetadata(
+                    $this->reflectionClass,
+                    $this->apieContext
+                ),
+                $input,
+                $output,
+                $this->apieContext
+            );
+        }
         if ($output->isDebug()) {
             $output->writeln("<info>This will be the resource data to create the object:</info>");
             $output->writeln(json_encode($rawContents, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
         }
+    
         
-        $apieContext = $this->apieContext->withContext(ContextConstants::RESOURCE_NAME, $this->reflectionClass->name);
         $response = ($this->apieFacadeAction)($apieContext, $rawContents);
         if (isset($response->resource)) {
             $output->writeln("<info>Resource was successfully created.</info>");

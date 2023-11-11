@@ -35,6 +35,26 @@ class ConsoleServiceProvider extends ServiceProvider
                 );
             }
         );
+        $this->app->singleton(
+            \Apie\Console\ApieInputHelper::class,
+            function ($app) {
+                return \Apie\Console\ApieInputHelper::create(
+                    $this->getTaggedServicesIterator(\Apie\Console\Helpers\InputInteractorInterface::class)
+                );
+                
+            }
+        );
+        \Apie\ServiceProviderGenerator\TagMap::register(
+            $this->app,
+            \Apie\Console\ApieInputHelper::class,
+            array(
+              0 =>
+              array(
+                'name' => 'console_helper',
+              ),
+            )
+        );
+        $this->app->tag([\Apie\Console\ApieInputHelper::class], 'console_helper');
         
     }
 }
