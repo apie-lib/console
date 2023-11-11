@@ -15,13 +15,13 @@ class IndentedOutputDecorator implements OutputInterface
         $this->indentation = str_repeat(' ', $indent);
     }
 
-    public function write($messages, $newline = false, $options = 0)
+    public function write($messages, $newline = false, $options = 0): void
     {
         $indentedMessages = $this->indentMessages($messages);
         $this->output->write($indentedMessages, $newline, $options);
     }
 
-    public function writeln($messages, $options = 0)
+    public function writeln($messages, $options = 0): void
     {
         $indentedMessages = $this->indentMessages($messages);
         $this->output->writeln($indentedMessages, $options);
@@ -45,9 +45,9 @@ class IndentedOutputDecorator implements OutputInterface
         return $indentedMessages;
     }
 
-    public function setVerbosity(int $level)
+    public function setVerbosity(int $level): void
     {
-        return $this->output->setVerbosity($level);
+        $this->output->setVerbosity($level);
     }
 
     public function getVerbosity(): int
@@ -75,9 +75,9 @@ class IndentedOutputDecorator implements OutputInterface
         return $this->output->isDebug();
     }
 
-    public function setDecorated(bool $decorated)
+    public function setDecorated(bool $decorated): void
     {
-        return $this->output->setDecorated($decorated);
+        $this->output->setDecorated($decorated);
     }
 
     public function isDecorated(): bool
@@ -85,9 +85,9 @@ class IndentedOutputDecorator implements OutputInterface
         return $this->output->isDecorated();
     }
 
-    public function setFormatter(OutputFormatterInterface $formatter)
+    public function setFormatter(OutputFormatterInterface $formatter): void
     {
-        return $this->output->setFormatter($formatter);
+        $this->output->setFormatter($formatter);
     }
 
     public function getFormatter(): OutputFormatterInterface
