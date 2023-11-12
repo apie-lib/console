@@ -30,10 +30,7 @@ final class UnionInteractor implements InputInteractorInterface
         /** @var array<string, MetadataInterface> */
         $mapping = [];
         foreach ($metadata->getTypes() as $metadata) {
-            $name = match($metadata->toScalarType()) {
-                ScalarType::STDCLASS => $metadata->toClass()?->name ?? 'object',
-                default => $metadata->toScalarType()->value,
-            };
+            $name = $metadata->toClass()?->name ?? $metadata->toScalarType()->value;
             $choices[] = $name;
             $mapping[$name] = $metadata;
         }
