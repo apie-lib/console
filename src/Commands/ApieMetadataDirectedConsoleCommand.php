@@ -4,6 +4,7 @@ namespace Apie\Console\Commands;
 use Apie\Common\ContextConstants;
 use Apie\Console\ApieInputHelper;
 use Apie\Core\Actions\ActionInterface;
+use Apie\Core\Actions\ActionResponse;
 use Apie\Core\BoundedContext\BoundedContext;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Entities\EntityInterface;
@@ -11,6 +12,7 @@ use Apie\Core\Metadata\Fields\FieldInterface;
 use Apie\Core\Metadata\Fields\FieldWithPossibleDefaultValue;
 use Apie\Core\Metadata\MetadataInterface;
 use ReflectionClass;
+use ReflectionProperty;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -123,7 +125,7 @@ abstract class ApieMetadataDirectedConsoleCommand extends Command
         }
         
         $response = ($this->apieFacadeAction)($apieContext, $rawContents);
-        if (isset($response->resource)) {
+        if ((new ReflectionProperty(ActionResponse::class, 'resource'))->isInitialized($response)) {
             $output->writeln('<info>' . $this->getSucessMessage() . '</info>');
             return Command::SUCCESS;
         };
