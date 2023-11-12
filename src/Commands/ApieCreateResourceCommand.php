@@ -28,4 +28,9 @@ final class ApieCreateResourceCommand extends ApieMetadataDirectedConsoleCommand
     {
         return "Resource was successfully created.";
     }
+
+    protected function requiresId(): bool
+    {
+        return false;
+    }
 }

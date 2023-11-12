@@ -12,6 +12,7 @@ use Apie\Core\Metadata\Fields\FieldWithPossibleDefaultValue;
 use Apie\Core\Metadata\MetadataInterface;
 use ReflectionClass;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -38,13 +39,19 @@ abstract class ApieMetadataDirectedConsoleCommand extends Command
 
     abstract protected function getMetadata(): MetadataInterface;
 
+    abstract protected function requiresId(): bool;
+
     final protected function configure(): void
     {
         $boundedContext = $this->apieContext->hasContext(BoundedContext::class)
             ? $this->apieContext->getContext(BoundedContext::class)
             : null;
         $this->setName('apie:' . ($boundedContext ? $boundedContext->getId() : 'unknown') . ':'. $this->getCommandName());
+        $this->setDescription($this->getCommandHelp());
         $this->setHelp($this->getCommandHelp());
+        if ($this->requiresId()) {
+            $this->addArgument('id', InputArgument::REQUIRED, 'id of entity');
+        }
         $this->addOption('interactive', 'i', InputOption::VALUE_NEGATABLE, 'Fill in the fields interactively');
         $metadata = $this->getMetadata();
         foreach ($metadata->getHashmap() as $fieldName => $field) {
@@ -98,6 +105,9 @@ abstract class ApieMetadataDirectedConsoleCommand extends Command
         }
         $apieContext = $this->apieContext
             ->withContext(ContextConstants::RESOURCE_NAME, $this->reflectionClass->name);
+        if ($this->requiresId()) {
+            $apieContext = $apieContext->withContext(ContextConstants::RESOURCE_ID, $input->getArgument('id'));
+        }
         if ($input->getOption('interactive')) {
             $this->getHelperSet()->set($this->apieInputHelper);
             $rawContents += $this->apieInputHelper->interactUsingMetadata(

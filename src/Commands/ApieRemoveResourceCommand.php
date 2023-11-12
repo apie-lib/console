@@ -27,4 +27,9 @@ final class ApieRemoveResourceCommand extends ApieMetadataDirectedConsoleCommand
     {
         return "Resource was successfully deleted.";
     }
+
+    protected function requiresId(): bool
+    {
+        return true;
+    }
 }
