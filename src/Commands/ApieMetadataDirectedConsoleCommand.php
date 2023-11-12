@@ -9,39 +9,44 @@ use Apie\Core\Context\ApieContext;
 use Apie\Core\Entities\EntityInterface;
 use Apie\Core\Metadata\Fields\FieldInterface;
 use Apie\Core\Metadata\Fields\FieldWithPossibleDefaultValue;
-use Apie\Core\Metadata\MetadataFactory;
+use Apie\Core\Metadata\MetadataInterface;
 use ReflectionClass;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-final class ApieConsoleCommand extends Command
+abstract class ApieMetadataDirectedConsoleCommand extends Command
 {
     /**
      * @param ReflectionClass<EntityInterface> $reflectionClass
      */
-    public function __construct(
-        private readonly ActionInterface $apieFacadeAction,
-        private readonly ApieContext $apieContext,
-        private readonly ReflectionClass $reflectionClass,
-        private readonly ApieInputHelper $apieInputHelper
+    final public function __construct(
+        protected readonly ActionInterface $apieFacadeAction,
+        protected readonly ApieContext $apieContext,
+        protected readonly ReflectionClass $reflectionClass,
+        protected readonly ApieInputHelper $apieInputHelper
     ) {
         parent::__construct();
     }
 
-    protected function configure(): void
+    abstract protected function getCommandName(): string;
+
+    abstract protected function getCommandHelp(): string;
+
+    abstract protected function getSucessMessage(): string;
+
+    abstract protected function getMetadata(): MetadataInterface;
+
+    final protected function configure(): void
     {
         $boundedContext = $this->apieContext->hasContext(BoundedContext::class)
             ? $this->apieContext->getContext(BoundedContext::class)
             : null;
-        $this->setName('apie:' . ($boundedContext ? $boundedContext->getId() : 'unknown') . ':create-' . $this->reflectionClass->getShortName());
-        $this->setHelp('This command allows you to create a ' . $this->reflectionClass->getShortName() .  ' instance');
+        $this->setName('apie:' . ($boundedContext ? $boundedContext->getId() : 'unknown') . ':'. $this->getCommandName());
+        $this->setHelp($this->getCommandHelp());
         $this->addOption('interactive', 'i', InputOption::VALUE_NEGATABLE, 'Fill in the fields interactively');
-        $metadata = MetadataFactory::getCreationMetadata(
-            $this->reflectionClass,
-            $this->apieContext
-        );
+        $metadata = $this->getMetadata();
         foreach ($metadata->getHashmap() as $fieldName => $field) {
             $this->addInputOption($fieldName, $field);
         }
@@ -75,7 +80,7 @@ final class ApieConsoleCommand extends Command
         }
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): int
+    final protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $rawContents = [];
         foreach ($input->getOptions() as $optionName => $optionValue) {
@@ -91,27 +96,25 @@ final class ApieConsoleCommand extends Command
                 }
             }
         }
-        $apieContext = $this->apieContext->withContext(ContextConstants::RESOURCE_NAME, $this->reflectionClass->name);
+        $apieContext = $this->apieContext
+            ->withContext(ContextConstants::RESOURCE_NAME, $this->reflectionClass->name);
         if ($input->getOption('interactive')) {
             $this->getHelperSet()->set($this->apieInputHelper);
             $rawContents += $this->apieInputHelper->interactUsingMetadata(
-                MetadataFactory::getCreationMetadata(
-                    $this->reflectionClass,
-                    $this->apieContext
-                ),
+                $this->getMetadata(),
                 $input,
                 $output,
                 $this->apieContext
             );
         }
         if ($output->isDebug()) {
-            $output->writeln("<info>This will be the resource data to create the object:</info>");
+            $output->writeln("<info>Raw data entered:</info>");
             $output->writeln(json_encode($rawContents, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
         }
         
         $response = ($this->apieFacadeAction)($apieContext, $rawContents);
         if (isset($response->resource)) {
-            $output->writeln("<info>Resource was successfully created.</info>");
+            $output->writeln('<info>' . $this->getSucessMessage() . '</info>');
             return Command::SUCCESS;
         };
         $output->writeln('<error>' . $response->error->getMessage() . '</error>');

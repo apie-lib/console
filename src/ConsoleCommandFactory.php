@@ -3,11 +3,14 @@ namespace Apie\Console;
 
 use Apie\Common\ActionDefinitionProvider;
 use Apie\Common\ActionDefinitions\CreateResourceActionDefinition;
+use Apie\Common\ActionDefinitions\RemoveResourceActionDefinition;
 use Apie\Common\ActionDefinitions\ReplaceResourceActionDefinition;
 use Apie\Common\Actions\CreateObjectAction;
+use Apie\Common\Actions\RemoveObjectAction;
 use Apie\Common\ApieFacade;
 use Apie\Common\ContextConstants;
-use Apie\Console\Commands\ApieConsoleCommand;
+use Apie\Console\Commands\ApieCreateResourceCommand;
+use Apie\Console\Commands\ApieRemoveResourceCommand;
 use Apie\Console\Lists\ConsoleCommandList;
 use Apie\Core\BoundedContext\BoundedContext;
 use Apie\Core\Context\ApieContext;
@@ -32,12 +35,20 @@ class ConsoleCommandFactory
         foreach ($this->actionDefinitionProvider->provideActionDefinitions($boundedContext, $apieContext) as $actionDefinition) {
             $action = null;
             $resourceName = null;
+            $className = null;
+            // create
             if ($actionDefinition instanceof CreateResourceActionDefinition || $actionDefinition instanceof ReplaceResourceActionDefinition) {
                 $action = new CreateObjectAction($this->apieFacade);
                 $resourceName = $actionDefinition->getResourceName();
+                $className = ApieCreateResourceCommand::class;
             }
-            if ($action !== null) {
-                $commands[] = new ApieConsoleCommand($action, $apieContext, $resourceName, $this->apieInputHelper);
+            if ($actionDefinition instanceof RemoveResourceActionDefinition) {
+                $action = new RemoveObjectAction($this->apieFacade);
+                $resourceName = $actionDefinition->getResourceName();
+                $className = ApieRemoveResourceCommand::class;
+            }
+            if ($action !== null && $className !== null) {
+                $commands[] = new $className($action, $apieContext, $resourceName, $this->apieInputHelper);
             }
         }
 

@@ -3,7 +3,6 @@ namespace Apie\Console\Helpers;
 
 use Apie\Console\ApieInputHelper;
 use Apie\Core\Context\ApieContext;
-use Apie\Core\Enums\ScalarType;
 use Apie\Core\Metadata\MetadataInterface;
 use Apie\Core\Metadata\UnionTypeMetadata;
 use Symfony\Component\Console\Helper\HelperSet;
