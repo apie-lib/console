@@ -38,6 +38,10 @@ final class NumberInteractor implements InputInteractorInterface
             $question->setValidator(function ($input) use ($metadata) {
                 return $metadata->toClass()->getMethod('fromNative')->invoke(null, $input)->toNative();
             });
+        } else {
+            $question->setValidator(function ($input) use ($metadata) {
+                return $metadata->toScalarType() === ScalarType::INTEGER ? Utils::toInt($input) : Utils::toFloat($input);
+            });
         }
         return $helper->ask($input, $output, $question);
     }
