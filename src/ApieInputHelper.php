@@ -3,6 +3,7 @@ namespace Apie\Console;
 
 use Apie\Console\Helpers\BooleanInteractor;
 use Apie\Console\Helpers\DefaultObjectInteractor;
+use Apie\Console\Helpers\EnumInteractor;
 use Apie\Console\Helpers\InputInteractorInterface;
 use Apie\Console\Helpers\NullInteractor;
 use Apie\Console\Helpers\NumberInteractor;
@@ -33,6 +34,7 @@ final class ApieInputHelper extends Helper
     {
         return new self(...[
             ...$additionalInteractors,
+            new EnumInteractor(),
             new UnionInteractor(),
             new StringInteractor(),
             new NullInteractor(),
