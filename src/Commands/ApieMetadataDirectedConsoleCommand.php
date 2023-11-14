@@ -112,12 +112,15 @@ abstract class ApieMetadataDirectedConsoleCommand extends Command
         }
         if ($input->getOption('interactive')) {
             $this->getHelperSet()->set($this->apieInputHelper);
-            $rawContents += $this->apieInputHelper->interactUsingMetadata(
+            $interactiveRawContents = $this->apieInputHelper->interactUsingMetadata(
                 $this->getMetadata(),
                 $input,
                 $output,
                 $this->apieContext
             );
+            if (is_array($interactiveRawContents)) {
+                $rawContents += $interactiveRawContents;
+            }
         }
         if ($output->isDebug()) {
             $output->writeln("<info>Raw data entered:</info>");
