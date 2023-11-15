@@ -30,6 +30,8 @@ final class EnumInteractor implements InputInteractorInterface
         $class = $metadata->toClass();
         assert($class instanceof ReflectionEnum);
         $question = new ChoiceQuestion('Pick a value: ', EnumUtils::getValues($class));
-        return $helper->ask($input, $output, $question);
+        $result = $helper->ask($input, $output, $question);
+        $output->writeln('');
+        return $result;
     }
 }

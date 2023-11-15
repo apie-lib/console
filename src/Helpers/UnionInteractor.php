@@ -38,6 +38,7 @@ final class UnionInteractor implements InputInteractorInterface
         $questionHelper = $helperSet->get('question');
         assert($questionHelper instanceof QuestionHelper);
         $pickedChoice =  $questionHelper->ask($input, $output, $choice);
+        $output->writeln('');
         $apieInputHelper = $helperSet->get('apie');
         assert($apieInputHelper instanceof ApieInputHelper);
         return $apieInputHelper->interactUsingMetadata($mapping[$pickedChoice], $input, $output, $context);
