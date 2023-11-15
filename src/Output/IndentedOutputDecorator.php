@@ -8,6 +8,8 @@ class IndentedOutputDecorator implements OutputInterface
 {
     private string $indentation;
 
+    private bool $startWithIndenting = true;
+
     public function __construct(
         private readonly OutputInterface $output,
         int $indent = 4
@@ -21,6 +23,7 @@ class IndentedOutputDecorator implements OutputInterface
     public function write(string|iterable $messages, bool $newline = false, int $options = 0): void
     {
         $indentedMessages = $this->indentMessages($messages);
+        $this->startWithIndenting = false;
         $this->output->write($indentedMessages, $newline, $options);
     }
 
@@ -30,6 +33,7 @@ class IndentedOutputDecorator implements OutputInterface
     public function writeln(string|iterable $messages, int $options = 0): void
     {
         $indentedMessages = $this->indentMessages($messages);
+        $this->startWithIndenting = true;
         $this->output->writeln($indentedMessages, $options);
     }
 
@@ -39,20 +43,15 @@ class IndentedOutputDecorator implements OutputInterface
      */
     private function indentMessages(string|iterable $messages): iterable
     {
-        if (!is_array($messages)) {
-            $messages = [$messages];
+        if (is_array($messages)) {
+            $messages = implode("\n", $messages);
         }
-
-        $indentedMessages = [];
-        foreach ($messages as $message) {
-            $lines = explode("\n", $message);
-            $indentedLines = array_map(function ($line) {
-                return $this->indentation . $line;
-            }, $lines);
-            $indentedMessages = array_merge($indentedMessages, $indentedLines);
+        if ($this->startWithIndenting) {
+            $messages = $this->indentation . $messages;
         }
+        $messages = str_replace("\n", "\n" . $this->indentation, $messages);
 
-        return $indentedMessages;
+        return explode("\n", $messages);
     }
 
     public function setVerbosity(int $level): void
