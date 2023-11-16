@@ -33,7 +33,7 @@ class ConsoleCommandFactoryTest extends TestCase
         $application->setAutoExit(false);
         $application->addCommands($actual->toArray());
 
-        $tester = new CommandTester($application->find('apie:default:create-UserWithAddress'));
+        $tester = new CommandTester($application->find('apie:default:user-with-address:create'));
         $tester->execute(
             [
              '--input-id' => '4cf3b41a-0cc1-471f-95ee-cd3c6ac184a0',

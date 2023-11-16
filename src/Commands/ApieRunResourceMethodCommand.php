@@ -2,6 +2,7 @@
 namespace Apie\Console\Commands;
 
 use Apie\Core\Actions\ActionResponse;
+use Apie\Core\Identifiers\KebabCaseSlug;
 use Apie\Core\Metadata\MetadataFactory;
 use Apie\Core\Metadata\MetadataInterface;
 
@@ -10,7 +11,8 @@ final class ApieRunResourceMethodCommand extends ApieMetadataDirectedConsoleComm
     protected function getCommandName(): string
     {
         assert(null !== $this->reflectionMethod);
-        return 'run-' . $this->reflectionClass->getShortName() . '-' . $this->reflectionMethod->name;
+        return KebabCaseSlug::fromClass($this->reflectionClass) . ':run:' . KebabCaseSlug::fromClass($this->reflectionMethod);
+
     }
 
     protected function getCommandHelp(): string

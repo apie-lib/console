@@ -2,6 +2,7 @@
 namespace Apie\Console\Commands;
 
 use Apie\Core\Actions\ActionResponse;
+use Apie\Core\Identifiers\KebabCaseSlug;
 use Apie\Core\Metadata\MetadataFactory;
 use Apie\Core\Metadata\MetadataInterface;
 use ReflectionClass;
@@ -10,7 +11,7 @@ final class ApieModifyResourceCommand extends ApieMetadataDirectedConsoleCommand
 {
     protected function getCommandName(): string
     {
-        return 'modify-' . $this->reflectionClass->getShortName();
+        return KebabCaseSlug::fromClass($this->reflectionClass) . ':modify';
     }
 
     protected function getCommandHelp(): string
