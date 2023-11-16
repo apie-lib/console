@@ -1,6 +1,7 @@
 <?php
 namespace Apie\Console\Commands;
 
+use Apie\Core\Actions\ActionResponse;
 use Apie\Core\Metadata\MetadataFactory;
 use Apie\Core\Metadata\MetadataInterface;
 use Apie\TypeConverter\ReflectionTypeFactory;
@@ -23,7 +24,7 @@ final class ApieRemoveResourceCommand extends ApieMetadataDirectedConsoleCommand
             ->getCreationMetadata($this->apieContext);
     }
 
-    protected function getSucessMessage(): string
+    protected function getSucessMessage(ActionResponse $actionResponse): string
     {
         return "Resource was successfully deleted.";
     }

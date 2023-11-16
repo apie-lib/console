@@ -1,8 +1,10 @@
 <?php
 namespace Apie\Console\Commands;
 
+use Apie\Core\Actions\ActionResponse;
 use Apie\Core\Metadata\MetadataFactory;
 use Apie\Core\Metadata\MetadataInterface;
+use ReflectionClass;
 
 final class ApieModifyResourceCommand extends ApieMetadataDirectedConsoleCommand
 {
@@ -24,9 +26,13 @@ final class ApieModifyResourceCommand extends ApieMetadataDirectedConsoleCommand
         );
     }
 
-    protected function getSucessMessage(): string
+    protected function getSucessMessage(ActionResponse $actionResponse): string
     {
-        return "Resource was successfully modified.";
+        return sprintf(
+            "Resource %s with id %s was successfully modified.",
+            (new ReflectionClass($actionResponse->resource))->getShortName(),
+            $actionResponse->resource->getId(),
+        );
     }
 
     protected function requiresId(): bool

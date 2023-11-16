@@ -36,6 +36,7 @@ class ConsoleCommandFactoryTest extends TestCase
         $tester = new CommandTester($application->find('apie:default:create-UserWithAddress'));
         $tester->execute(
             [
+             '--input-id' => '4cf3b41a-0cc1-471f-95ee-cd3c6ac184a0',
              '--input-password' => 'Str0ngP4sw#rd',
              '--input-address' => '{"street":"evergreen terrace","streetNumber":742,"zipcode":"11111","city":"Springfield"}',
              '-vvv' => true,
@@ -43,6 +44,6 @@ class ConsoleCommandFactoryTest extends TestCase
         );
         $tester->assertCommandIsSuccessful();
         $output = $tester->getDisplay();
-        $this->assertStringContainsString('Resource was successfully created.', $output);
+        $this->assertStringContainsString('Resource UserWithAddress with id 4cf3b41a-0cc1-471f-95ee-cd3c6ac184a0 was successfully created.', $output);
     }
 }
