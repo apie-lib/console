@@ -12,6 +12,7 @@ use Apie\Core\Metadata\Fields\FieldInterface;
 use Apie\Core\Metadata\Fields\FieldWithPossibleDefaultValue;
 use Apie\Core\Metadata\MetadataInterface;
 use ReflectionClass;
+use ReflectionMethod;
 use ReflectionProperty;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -28,7 +29,8 @@ abstract class ApieMetadataDirectedConsoleCommand extends Command
         protected readonly ActionInterface $apieFacadeAction,
         protected readonly ApieContext $apieContext,
         protected readonly ReflectionClass $reflectionClass,
-        protected readonly ApieInputHelper $apieInputHelper
+        protected readonly ApieInputHelper $apieInputHelper,
+        protected readonly ?ReflectionMethod $reflectionMethod = null
     ) {
         parent::__construct();
     }
@@ -107,6 +109,11 @@ abstract class ApieMetadataDirectedConsoleCommand extends Command
         }
         $apieContext = $this->apieContext
             ->withContext(ContextConstants::RESOURCE_NAME, $this->reflectionClass->name);
+        if ($this->reflectionMethod) {
+            $apieContext = $apieContext
+                ->withContext(ContextConstants::METHOD_CLASS, $this->reflectionMethod->getDeclaringClass()->name)
+                ->withContext(ContextConstants::METHOD_NAME, $this->reflectionMethod->getName());
+        }
         if ($this->requiresId()) {
             $apieContext = $apieContext->withContext(ContextConstants::RESOURCE_ID, $input->getArgument('id'));
         }
