@@ -7,6 +7,7 @@ use Apie\Core\Metadata\MetadataInterface;
 use Apie\Core\Metadata\ScalarMetadata;
 use Apie\Core\Metadata\ValueObjectMetadata;
 use Apie\Core\ValueObjects\IsPasswordValueObject;
+use LogicException;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
@@ -36,6 +37,17 @@ final class StringInteractor implements InputInteractorInterface
             });
             if (in_array(IsPasswordValueObject::class, $metadata->toClass()->getTraitNames())) {
                 $question->setHidden(true);
+                $firstEnteredPassword = (string) $helper->ask($input, $output, $question);
+                $question = new Question('Please type again: ');
+                $question->setHidden(true);
+                $question->setMaxAttempts(1);
+                $question->setValidator(function ($input) use ($metadata, $firstEnteredPassword) {
+                    $result = $metadata->toClass()->getMethod('fromNative')->invoke(null, $input)->toNative();
+                    if ($result !== $firstEnteredPassword) {
+                        throw new LogicException('You did not enter the same password twice!');
+                    }
+                    return $result;
+                });
             }
         }
         return (string) $helper->ask($input, $output, $question);
