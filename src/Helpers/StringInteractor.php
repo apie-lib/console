@@ -7,6 +7,7 @@ use Apie\Core\Metadata\MetadataInterface;
 use Apie\Core\Metadata\ScalarMetadata;
 use Apie\Core\Metadata\ValueObjectMetadata;
 use Apie\Core\ValueObjects\IsPasswordValueObject;
+use Exception;
 use LogicException;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -42,7 +43,11 @@ final class StringInteractor implements InputInteractorInterface
                 $question->setHidden(true);
                 $question->setMaxAttempts(1);
                 $question->setValidator(function ($input) use ($metadata, $firstEnteredPassword) {
-                    $result = $metadata->toClass()->getMethod('fromNative')->invoke(null, $input)->toNative();
+                    try {
+                        $result = $metadata->toClass()->getMethod('fromNative')->invoke(null, $input)->toNative();
+                    } catch (Exception $error) {
+                        $result = $input;
+                    }
                     if ($result !== $firstEnteredPassword) {
                         throw new LogicException('You did not enter the same password twice!');
                     }
