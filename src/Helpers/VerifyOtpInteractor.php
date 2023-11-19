@@ -8,6 +8,7 @@ use Apie\OtpValueObjects\HOTPSecret;
 use Apie\OtpValueObjects\TOTPSecret;
 use Apie\OtpValueObjects\VerifyOTP;
 use LogicException;
+use ReflectionClass;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
@@ -31,20 +32,22 @@ final class VerifyOtpInteractor implements InputInteractorInterface
         OutputInterface $output,
         ApieContext $context
     ): mixed {
+        $helper = $helperSet->get('question');
+        assert($helper instanceof QuestionHelper);
+
         $resource = $context->getContext(ContextConstants::RESOURCE);
         $otpClass = $metadata->toClass();
         assert($otpClass !== null);
         $property = $otpClass->getMethod('getOtpReference')->invoke(null);
         $secret = $property->getValue($resource);
         assert(is_callable([$secret, 'verify']));
-        $helper = $helperSet->get('question');
-        assert($helper instanceof QuestionHelper);
 
         $output->writeln('Open your authenticator application and add this code manually:');
         $output->writeln('Name: ' . $otpClass->getMethod('getOtpLabel')->invoke(null, $resource));
         $output->writeln('Secret code: ' . $secret);
-        $output->writeln('Type: ' . preg_replace('/Secret$/', '', new ReflectionClass($secret))->getShortName());
-        $question = new Question('Please enter the value of this field: ');
+        $output->writeln('Type: ' . preg_replace('/Secret$/', '', (new ReflectionClass($secret))->getShortName()));
+
+        $question = new Question('Please enter the code shown in your authenticator application: ');
         $question->setValidator(function ($input) use ($metadata, $secret) {
             $otpInstance = $metadata->toClass()->getMethod('fromNative')->invoke(null, $input);
             assert($otpInstance instanceof VerifyOTP);
