@@ -6,11 +6,15 @@ use Apie\Console\ApieInputHelper;
 use Apie\Core\Actions\ActionInterface;
 use Apie\Core\Actions\ActionResponse;
 use Apie\Core\BoundedContext\BoundedContext;
+use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Context\ApieContext;
+use Apie\Core\Datalayers\ApieDatalayer;
 use Apie\Core\Entities\EntityInterface;
+use Apie\Core\IdentifierUtils;
 use Apie\Core\Metadata\Fields\FieldInterface;
 use Apie\Core\Metadata\Fields\FieldWithPossibleDefaultValue;
 use Apie\Core\Metadata\MetadataInterface;
+use Exception;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionProperty;
@@ -115,7 +119,18 @@ abstract class ApieMetadataDirectedConsoleCommand extends Command
                 ->withContext(ContextConstants::METHOD_NAME, $this->reflectionMethod->getName());
         }
         if ($this->requiresId()) {
-            $apieContext = $apieContext->withContext(ContextConstants::RESOURCE_ID, $input->getArgument('id'));
+            $id = $input->getArgument('id');
+            $apieContext = $apieContext->withContext(ContextConstants::RESOURCE_ID, $id);
+            try {
+                $resource = $apieContext->getContext(ApieDatalayer::class)->find(
+                    IdentifierUtils::entityClassToIdentifier($this->reflectionClass)->newInstance($id),
+                    $apieContext->getContext(BoundedContext::class)
+                );
+            } catch (Exception $exception) {
+                $output->writeln('<error>' . $exception->getMessage() . '</error>');
+                return Command::FAILURE;
+            }
+            $apieContext = $apieContext->withContext(ContextConstants::RESOURCE, $resource);
         }
         if ($input->getOption('interactive')) {
             $this->getHelperSet()->set($this->apieInputHelper);
