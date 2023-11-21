@@ -57,6 +57,7 @@ final class VerifyOtpInteractor implements InputInteractorInterface
             if (!$secret->verify($otpInstance)) {
                 throw new LogicException('Code is not valid!');
             }
+            return $otpInstance->toNative();
         });
         return (string) $helper->ask($input, $output, $question);
     }
