@@ -138,7 +138,7 @@ abstract class ApieMetadataDirectedConsoleCommand extends Command
                 $this->getMetadata(),
                 $input,
                 $output,
-                $this->apieContext
+                $apieContext
             );
             if (is_array($interactiveRawContents)) {
                 $rawContents += $interactiveRawContents;
