@@ -37,13 +37,18 @@ final class VerifyOtpInteractor implements InputInteractorInterface
         $otpClass = $metadata->toClass();
         assert($otpClass !== null);
         $property = $otpClass->getMethod('getOtpReference')->invoke(null);
+        $label = $otpClass->getMethod('getOtpLabel')->invoke(null, $resource);
         $secret = $property->getValue($resource);
         assert(is_callable([$secret, 'verify']));
 
         $output->writeln('Open your authenticator application and add this code manually:');
-        $output->writeln('Name: ' . $otpClass->getMethod('getOtpLabel')->invoke(null, $resource));
+        $output->writeln('Name: ' . $label);
         $output->writeln('Secret code: ' . $secret);
         $output->writeln('Type: ' . preg_replace('/Secret$/', '', (new ReflectionClass($secret))->getShortName()));
+
+        if (is_callable([$secret, 'getQrCodeUri'])) {
+            $output->writeln('Or scan this QR code: ' . $secret->getQrCodeUri($label));
+        }
 
         $question = new Question('Please enter the code shown in your authenticator application: ');
         $question->setValidator(function ($input) use ($metadata, $secret) {
