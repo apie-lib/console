@@ -42,7 +42,7 @@ abstract class ApieMetadataDirectedConsoleCommand extends Command
 
     abstract protected function getCommandHelp(): string;
 
-    abstract protected function getSucessMessage(ActionResponse $actionResponse): string;
+    abstract protected function getSuccessMessage(ActionResponse $actionResponse): string;
 
     abstract protected function getMetadata(): MetadataInterface;
 
@@ -150,7 +150,7 @@ abstract class ApieMetadataDirectedConsoleCommand extends Command
         
         $response = ($this->apieFacadeAction)($apieContext, $rawContents);
         if ((new ReflectionProperty(ActionResponse::class, 'resource'))->isInitialized($response)) {
-            $output->writeln('<info>' . $this->getSucessMessage($response) . '</info>');
+            $output->writeln('<info>' . $this->getSuccessMessage($response) . '</info>');
             return Command::SUCCESS;
         };
         $output->writeln('<error>' . $response->error->getMessage() . '</error>');

@@ -27,7 +27,7 @@ final class ApieCreateResourceCommand extends ApieMetadataDirectedConsoleCommand
         );
     }
 
-    protected function getSucessMessage(ActionResponse $actionResponse): string
+    protected function getSuccessMessage(ActionResponse $actionResponse): string
     {
         return sprintf(
             "Resource %s with id %s was successfully created.",

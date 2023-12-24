@@ -30,7 +30,7 @@ final class ApieRunResourceMethodCommand extends ApieMetadataDirectedConsoleComm
         );
     }
 
-    protected function getSucessMessage(ActionResponse $actionResponse): string
+    protected function getSuccessMessage(ActionResponse $actionResponse): string
     {
         return 'TODO';
     }

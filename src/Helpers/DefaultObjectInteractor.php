@@ -31,7 +31,6 @@ class DefaultObjectInteractor implements InputInteractorInterface
         $result = [];
         foreach ($metadata->getHashmap() as $field => $fieldMeta) {
             $output->writeln('Field: ' . $field);
-            // TODO indent with some IndentOutputDecorator?
             $typehint = $fieldMeta->getTypehint();
             if (!$typehint) {
                 $typehint = ReflectionTypeFactory::createReflectionType('mixed');

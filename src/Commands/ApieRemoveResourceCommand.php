@@ -25,7 +25,7 @@ final class ApieRemoveResourceCommand extends ApieMetadataDirectedConsoleCommand
             ->getCreationMetadata($this->apieContext);
     }
 
-    protected function getSucessMessage(ActionResponse $actionResponse): string
+    protected function getSuccessMessage(ActionResponse $actionResponse): string
     {
         return "Resource was successfully deleted.";
     }
