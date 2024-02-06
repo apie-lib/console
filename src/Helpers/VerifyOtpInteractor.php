@@ -21,7 +21,7 @@ final class VerifyOtpInteractor implements InputInteractorInterface
         if (!$class) {
             return false;
         }
-        return $class->isSubclassOf(VerifyOTP::class);
+        return class_exists(VerifyOTP::class) && $class->isSubclassOf(VerifyOTP::class);
     }
     public function interactWith(
         MetadataInterface $metadata,
