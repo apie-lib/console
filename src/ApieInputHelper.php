@@ -5,6 +5,8 @@ use Apie\Console\Helpers\BooleanInteractor;
 use Apie\Console\Helpers\DefaultObjectInteractor;
 use Apie\Console\Helpers\EnumInteractor;
 use Apie\Console\Helpers\InputInteractorInterface;
+use Apie\Console\Helpers\ItemHashmapInteractor;
+use Apie\Console\Helpers\ItemListInteractor;
 use Apie\Console\Helpers\NullInteractor;
 use Apie\Console\Helpers\NumberInteractor;
 use Apie\Console\Helpers\StringInteractor;
@@ -36,6 +38,8 @@ final class ApieInputHelper extends Helper
         return new self(...[
             ...$additionalInteractors,
             new VerifyOtpInteractor(),
+            new ItemListInteractor(),
+            new ItemHashmapInteractor(),
             new EnumInteractor(),
             new UnionInteractor(),
             new StringInteractor(),
