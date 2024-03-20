@@ -111,7 +111,8 @@ abstract class ApieMetadataDirectedConsoleCommand extends Command
             }
         }
         $apieContext = $this->apieContext
-            ->withContext(ContextConstants::RESOURCE_NAME, $this->reflectionClass->name);
+            ->withContext(ContextConstants::RESOURCE_NAME, $this->reflectionClass->name)
+            ->withContext(ContextConstants::APIE_ACTION, get_class($this->apieFacadeAction));
         if ($this->reflectionMethod) {
             $apieContext = $apieContext
                 ->withContext(ContextConstants::METHOD_CLASS, $this->reflectionMethod->getDeclaringClass()->name)
