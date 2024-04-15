@@ -69,7 +69,6 @@ class ConsoleCommandFactory
                 $commands[] = new $className($action, $apieContext, $resourceName, $this->apieInputHelper, $method);
             }
         }
-
         return new ConsoleCommandList($commands);
     }
 }
