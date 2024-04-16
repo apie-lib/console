@@ -118,6 +118,10 @@ abstract class ApieMetadataDirectedConsoleCommand extends Command
                 ->withContext(ContextConstants::METHOD_CLASS, $this->reflectionMethod->getDeclaringClass()->name)
                 ->withContext(ContextConstants::METHOD_NAME, $this->reflectionMethod->getName());
         }
+        $routeAttributes = $this->apieFacadeAction->getRouteAttributes($this->reflectionClass, $this->reflectionMethod);
+        foreach ($routeAttributes as $key => $value) {
+            $apieContext = $apieContext->withContext($key, $value);
+        }
         if ($this->requiresId()) {
             $id = $input->getArgument('id');
             $apieContext = $apieContext->withContext(ContextConstants::RESOURCE_ID, $id);

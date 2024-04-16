@@ -6,16 +6,19 @@ use Apie\Common\ActionDefinitions\CreateResourceActionDefinition;
 use Apie\Common\ActionDefinitions\ModifyResourceActionDefinition;
 use Apie\Common\ActionDefinitions\RemoveResourceActionDefinition;
 use Apie\Common\ActionDefinitions\ReplaceResourceActionDefinition;
+use Apie\Common\ActionDefinitions\RunGlobalMethodDefinition;
 use Apie\Common\ActionDefinitions\RunResourceMethodDefinition;
 use Apie\Common\Actions\CreateObjectAction;
 use Apie\Common\Actions\ModifyObjectAction;
 use Apie\Common\Actions\RemoveObjectAction;
+use Apie\Common\Actions\RunAction;
 use Apie\Common\Actions\RunItemMethodAction;
 use Apie\Common\ApieFacade;
 use Apie\Common\ContextConstants;
 use Apie\Console\Commands\ApieCreateResourceCommand;
 use Apie\Console\Commands\ApieModifyResourceCommand;
 use Apie\Console\Commands\ApieRemoveResourceCommand;
+use Apie\Console\Commands\ApieRunGlobalMethodCommand;
 use Apie\Console\Commands\ApieRunResourceMethodCommand;
 use Apie\Console\Lists\ConsoleCommandList;
 use Apie\Core\BoundedContext\BoundedContext;
@@ -64,6 +67,12 @@ class ConsoleCommandFactory
                 $resourceName = $actionDefinition->getResourceName();
                 $className = ApieRunResourceMethodCommand::class;
                 $method = $actionDefinition->getMethod();
+            }
+            if ($actionDefinition instanceof RunGlobalMethodDefinition) {
+                $action = new RunAction($this->apieFacade);
+                $method = $actionDefinition->getMethod();
+                $resourceName = $method->getDeclaringClass();
+                $className = ApieRunGlobalMethodCommand::class;
             }
             if ($action !== null && $className !== null) {
                 $commands[] = new $className($action, $apieContext, $resourceName, $this->apieInputHelper, $method);
