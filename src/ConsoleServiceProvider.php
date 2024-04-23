@@ -6,7 +6,7 @@ use Illuminate\Support\ServiceProvider;
 
 /**
  * This file is generated with apie/service-provider-generator from file: console.yaml
- * @codecoverageIgnore
+ * @codeCoverageIgnore
  */
 class ConsoleServiceProvider extends ServiceProvider
 {
