@@ -14,7 +14,6 @@ use Apie\Common\Actions\RemoveObjectAction;
 use Apie\Common\Actions\RunAction;
 use Apie\Common\Actions\RunItemMethodAction;
 use Apie\Common\ApieFacade;
-use Apie\Common\ContextConstants;
 use Apie\Console\Commands\ApieCreateResourceCommand;
 use Apie\Console\Commands\ApieModifyResourceCommand;
 use Apie\Console\Commands\ApieRemoveResourceCommand;
@@ -23,6 +22,7 @@ use Apie\Console\Commands\ApieRunResourceMethodCommand;
 use Apie\Console\Lists\ConsoleCommandList;
 use Apie\Core\BoundedContext\BoundedContext;
 use Apie\Core\Context\ApieContext;
+use Apie\Core\ContextConstants;
 use Apie\Core\Enums\ConsoleCommand;
 
 class ConsoleCommandFactory

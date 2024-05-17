@@ -1,12 +1,12 @@
 <?php
 namespace Apie\Console\Commands;
 
-use Apie\Common\ContextConstants;
 use Apie\Console\ApieInputHelper;
 use Apie\Core\Actions\ActionInterface;
 use Apie\Core\Actions\ActionResponse;
 use Apie\Core\BoundedContext\BoundedContext;
 use Apie\Core\Context\ApieContext;
+use Apie\Core\ContextConstants;
 use Apie\Core\Datalayers\ApieDatalayer;
 use Apie\Core\Entities\EntityInterface;
 use Apie\Core\IdentifierUtils;
