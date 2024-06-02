@@ -15,7 +15,7 @@ final class NullInteractor implements InputInteractorInterface
     public function supports(MetadataInterface $metadata): bool
     {
         return ($metadata instanceof ScalarMetadata || $metadata instanceof ValueObjectMetadata)
-            && $metadata->toScalarType() === ScalarType::NULL;
+            && $metadata->toScalarType() === ScalarType::NULLVALUE;
     }
     public function interactWith(
         MetadataInterface $metadata,

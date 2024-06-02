@@ -12,7 +12,6 @@ final class ApieRunResourceMethodCommand extends ApieMetadataDirectedConsoleComm
     {
         assert(null !== $this->reflectionMethod);
         return KebabCaseSlug::fromClass($this->reflectionClass) . ':run:' . KebabCaseSlug::fromClass($this->reflectionMethod);
-
     }
 
     protected function getCommandHelp(): string
