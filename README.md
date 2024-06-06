@@ -6,7 +6,7 @@
 
 
 
- [![Latest Stable Version](http://poser.pugx.org/apie/console/v)](https://packagist.org/packages/apie/console) [![Total Downloads](http://poser.pugx.org/apie/console/downloads)](https://packagist.org/packages/apie/console) [![Latest Unstable Version](http://poser.pugx.org/apie/console/v/unstable)](https://packagist.org/packages/apie/console) [![License](http://poser.pugx.org/apie/console/license)](https://packagist.org/packages/apie/console) [![PHP Version Require](http://poser.pugx.org/apie/console/require/php)](https://packagist.org/packages/apie/console) [![Code coverage](https://raw.githubusercontent.com/apie-lib/console/main/coverage_badge.svg)](https://apie-lib.github.io/coverage/console/index.html)  
+ [![Latest Stable Version](http://poser.pugx.org/apie/console/v)](https://packagist.org/packages/apie/console) [![Total Downloads](http://poser.pugx.org/apie/console/downloads)](https://packagist.org/packages/apie/console) [![Latest Unstable Version](http://poser.pugx.org/apie/console/v/unstable)](https://packagist.org/packages/apie/console) [![License](http://poser.pugx.org/apie/console/license)](https://packagist.org/packages/apie/console) [![PHP Version Require](http://poser.pugx.org/apie/console/require/php)](https://packagist.org/packages/apie/console) [![PHP Composer](https://apie-lib.github.io/projectCoverage/coverage-console.svg)](https://apie-lib.github.io/projectCoverage/app/packages/console/index.html)  
 
 [![PHP Composer](https://github.com/apie-lib/console/actions/workflows/php.yml/badge.svg?event=push)](https://github.com/apie-lib/console/actions/workflows/php.yml)
 
