@@ -42,6 +42,7 @@ class ConsoleServiceProvider extends ServiceProvider
                 return \Apie\Console\ApieInputHelper::create(
                     $this->getTaggedServicesIterator(\Apie\Console\Helpers\InputInteractorInterface::class)
                 );
+                
             }
         );
         \Apie\ServiceProviderGenerator\TagMap::register(
@@ -55,5 +56,6 @@ class ConsoleServiceProvider extends ServiceProvider
             )
         );
         $this->app->tag([\Apie\Console\ApieInputHelper::class], 'console.helper');
+        
     }
 }
