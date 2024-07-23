@@ -11,6 +11,7 @@ use Apie\Console\Helpers\NullInteractor;
 use Apie\Console\Helpers\NumberInteractor;
 use Apie\Console\Helpers\StringInteractor;
 use Apie\Console\Helpers\UnionInteractor;
+use Apie\Console\Helpers\UploadedFileInteractor;
 use Apie\Console\Helpers\VerifyOtpInteractor;
 use Apie\Core\Context\ApieContext;
 use Apie\Core\Metadata\MetadataFactory;
@@ -38,6 +39,7 @@ final class ApieInputHelper extends Helper
         return new self(...[
             ...$additionalInteractors,
             new VerifyOtpInteractor(),
+            new UploadedFileInteractor(),
             new ItemListInteractor(),
             new ItemHashmapInteractor(),
             new EnumInteractor(),
