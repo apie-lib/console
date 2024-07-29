@@ -15,6 +15,9 @@ final class DisplayResultHelper
 
     public static function displayResult(mixed $result): string
     {
+        if (is_string($result)) {
+            return $result;
+        }
         $cloner = new VarCloner();
         $stream = tmpfile();
         $dumper = new CliDumper($stream);
