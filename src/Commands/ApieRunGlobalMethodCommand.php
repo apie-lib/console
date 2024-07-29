@@ -1,6 +1,7 @@
 <?php
 namespace Apie\Console\Commands;
 
+use Apie\Console\Helpers\DisplayResultHelper;
 use Apie\Core\Actions\ActionResponse;
 use Apie\Core\Identifiers\KebabCaseSlug;
 use Apie\Core\Metadata\MetadataFactory;
@@ -31,7 +32,7 @@ final class ApieRunGlobalMethodCommand extends ApieMetadataDirectedConsoleComman
 
     protected function getSuccessMessage(ActionResponse $actionResponse): string
     {
-        return 'TODO';
+        return 'The result was: ' . PHP_EOL . DisplayResultHelper::displayResult($actionResponse->result);
     }
 
     protected function requiresId(): bool
