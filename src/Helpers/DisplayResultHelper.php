@@ -1,11 +1,11 @@
 <?php
 namespace Apie\Console\Helpers;
 
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\VarDumper\Cloner\VarCloner;
 use Symfony\Component\VarDumper\Dumper\CliDumper;
 
-final class DisplayResultHelper {
+final class DisplayResultHelper
+{
     /**
      * @codeCoverageIgnore
      */
