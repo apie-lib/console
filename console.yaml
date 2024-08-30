@@ -5,6 +5,10 @@ services:
       - '@Apie\Core\ContextBuilders\ContextBuilderFactory'
       - '@Apie\Core\BoundedContext\BoundedContextHashmap'
 
+  Apie\Console\ConsoleCliStorage:
+    arguments:
+        - '@Apie\Core\Other\FileWriterInterface'
+
   apie.console.factory:
     alias: Apie\Common\Wrappers\ConsoleCommandFactory
     public: true
@@ -14,6 +18,7 @@ services:
       - '@Apie\Common\ApieFacade'
       - '@Apie\Common\ActionDefinitionProvider'
       - '@Apie\Console\ApieInputHelper'
+      - '@Apie\Console\ConsoleCliStorage'
 
   Apie\Console\ApieInputHelper:
     factory: ['Apie\Console\ApieInputHelper', 'create']

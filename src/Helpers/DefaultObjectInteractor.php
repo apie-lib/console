@@ -30,6 +30,9 @@ class DefaultObjectInteractor implements InputInteractorInterface
     
         $result = [];
         foreach ($metadata->getHashmap() as $field => $fieldMeta) {
+            if (!$fieldMeta->isField()) {
+                continue;
+            }
             $output->writeln('Field: ' . $field);
             $typehint = $fieldMeta->getTypehint();
             if (!$typehint) {

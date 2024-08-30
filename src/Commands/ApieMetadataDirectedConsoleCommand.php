@@ -2,6 +2,7 @@
 namespace Apie\Console\Commands;
 
 use Apie\Console\ApieInputHelper;
+use Apie\Console\ConsoleCliStorage;
 use Apie\Core\Actions\ActionInterface;
 use Apie\Core\Actions\ActionResponse;
 use Apie\Core\BoundedContext\BoundedContext;
@@ -33,6 +34,7 @@ abstract class ApieMetadataDirectedConsoleCommand extends Command
         protected readonly ApieContext $apieContext,
         protected readonly ReflectionClass $reflectionClass,
         protected readonly ApieInputHelper $apieInputHelper,
+        protected readonly ConsoleCliStorage $consoleCliStorage,
         protected readonly ?ReflectionMethod $reflectionMethod = null
     ) {
         parent::__construct();

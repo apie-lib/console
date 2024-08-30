@@ -24,6 +24,14 @@ class ConsoleServiceProvider extends ServiceProvider
                 );
             }
         );
+        $this->app->singleton(
+            \Apie\Console\ConsoleCliStorage::class,
+            function ($app) {
+                return new \Apie\Console\ConsoleCliStorage(
+                    $app->make(\Apie\Core\Other\FileWriterInterface::class)
+                );
+            }
+        );
         $this->app->bind('apie.console.factory', \Apie\Common\Wrappers\ConsoleCommandFactory::class);
         
         $this->app->singleton(
@@ -32,7 +40,8 @@ class ConsoleServiceProvider extends ServiceProvider
                 return new \Apie\Console\ConsoleCommandFactory(
                     $app->make(\Apie\Common\ApieFacade::class),
                     $app->make(\Apie\Common\ActionDefinitionProvider::class),
-                    $app->make(\Apie\Console\ApieInputHelper::class)
+                    $app->make(\Apie\Console\ApieInputHelper::class),
+                    $app->make(\Apie\Console\ConsoleCliStorage::class)
                 );
             }
         );

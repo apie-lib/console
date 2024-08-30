@@ -30,7 +30,8 @@ class ConsoleCommandFactory
     public function __construct(
         private readonly ApieFacade $apieFacade,
         private readonly ActionDefinitionProvider $actionDefinitionProvider,
-        private readonly ApieInputHelper $apieInputHelper
+        private readonly ApieInputHelper $apieInputHelper,
+        private readonly ConsoleCliStorage $consoleCliStorage
     ) {
     }
 
@@ -40,6 +41,7 @@ class ConsoleCommandFactory
         $apieContext = $apieContext->withContext(ConsoleCommand::class, ConsoleCommand::CONSOLE_COMMAND)
             ->withContext(ConsoleCommand::CONSOLE_COMMAND->value, true)
             ->withContext(ContextConstants::BOUNDED_CONTEXT_ID, $boundedContext->getId())
+            ->registerInstance($this->consoleCliStorage)
             ->registerInstance($boundedContext);
         foreach ($this->actionDefinitionProvider->provideActionDefinitions($boundedContext, $apieContext) as $actionDefinition) {
             $action = null;
@@ -75,7 +77,14 @@ class ConsoleCommandFactory
                 $className = ApieRunGlobalMethodCommand::class;
             }
             if ($action !== null && $className !== null) {
-                $commands[] = new $className($action, $apieContext, $resourceName, $this->apieInputHelper, $method);
+                $commands[] = new $className(
+                    $action,
+                    $apieContext,
+                    $resourceName,
+                    $this->apieInputHelper,
+                    $this->consoleCliStorage,
+                    $method
+                );
             }
         }
         return new ConsoleCommandList($commands);

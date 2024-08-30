@@ -5,8 +5,10 @@ use Apie\Common\ActionDefinitionProvider;
 use Apie\Common\Actions\CreateObjectAction;
 use Apie\Common\Tests\Concerns\ProvidesApieFacade;
 use Apie\Console\ApieInputHelper;
+use Apie\Console\ConsoleCliStorage;
 use Apie\Console\ConsoleCommandFactory;
 use Apie\Core\Context\ApieContext;
+use Apie\Core\Other\MockFileWriter;
 use Apie\Fixtures\BoundedContextFactory;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
@@ -26,7 +28,8 @@ class ConsoleCommandFactoryTest extends TestCase
         $testItem = new ConsoleCommandFactory(
             $this->givenAnApieFacade(CreateObjectAction::class),
             new ActionDefinitionProvider,
-            new ApieInputHelper()
+            new ApieInputHelper(),
+            new ConsoleCliStorage(new MockFileWriter())
         );
         $actual = $testItem->createForBoundedContext($boundedContext, $apieContext);
         $application = new Application();
