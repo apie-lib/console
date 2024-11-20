@@ -130,7 +130,7 @@ abstract class ApieMetadataDirectedConsoleCommand extends Command
             try {
                 $resource = $apieContext->getContext(ApieDatalayer::class)->find(
                     IdentifierUtils::entityClassToIdentifier($this->reflectionClass)->newInstance($id),
-                    $apieContext->getContext(BoundedContext::class)
+                    $apieContext->getContext(BoundedContext::class)->getId()
                 );
             } catch (Exception $exception) {
                 $output->writeln('<error>' . $exception->getMessage() . '</error>');
