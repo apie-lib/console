@@ -16,6 +16,9 @@ final class ConsoleCliStorage
     ) {
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     private function getHomePath(): string
     {
         if ($this->homePath) {
