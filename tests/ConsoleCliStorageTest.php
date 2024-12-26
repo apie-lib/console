@@ -7,9 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 class ConsoleCliStorageTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_store_and_restore_keys_in_home_path()
     {
         $filewriter = new MockFileWriter();

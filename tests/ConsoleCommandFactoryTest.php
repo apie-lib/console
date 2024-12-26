@@ -18,9 +18,7 @@ class ConsoleCommandFactoryTest extends TestCase
 {
     use ProvidesApieFacade;
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function it_can_register_console_commands_for_a_bounded_context_and_run_it()
     {
         $boundedContext = BoundedContextFactory::createExample();
