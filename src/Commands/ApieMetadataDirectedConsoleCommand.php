@@ -14,6 +14,7 @@ use Apie\Core\IdentifierUtils;
 use Apie\Core\Metadata\Fields\FieldInterface;
 use Apie\Core\Metadata\Fields\FieldWithPossibleDefaultValue;
 use Apie\Core\Metadata\MetadataInterface;
+use BackedEnum;
 use Exception;
 use ReflectionClass;
 use ReflectionMethod;
@@ -79,6 +80,11 @@ abstract class ApieMetadataDirectedConsoleCommand extends Command
         //}
 
         if ($field instanceof FieldWithPossibleDefaultValue && $field->hasDefaultValue()) {
+            $defaultValue = $field->getDefaultValue();
+            // maybe more fine tuning
+            if ($defaultValue instanceof BackedEnum) {
+                $defaultValue = $defaultValue->value;
+            }
             $this->addOption(
                 'input-' . $name,
                 null,
