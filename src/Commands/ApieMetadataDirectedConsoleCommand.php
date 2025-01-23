@@ -90,7 +90,7 @@ abstract class ApieMetadataDirectedConsoleCommand extends Command
                 null,
                 $flags,
                 'provide ' . $name . ' value',
-                $field->getDefaultValue()
+                $defaultValue
             );
         } else {
             $this->addOption(
