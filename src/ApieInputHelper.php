@@ -9,6 +9,7 @@ use Apie\Console\Helpers\ItemHashmapInteractor;
 use Apie\Console\Helpers\ItemListInteractor;
 use Apie\Console\Helpers\NullInteractor;
 use Apie\Console\Helpers\NumberInteractor;
+use Apie\Console\Helpers\PolymorphicObjectInteractor;
 use Apie\Console\Helpers\StringInteractor;
 use Apie\Console\Helpers\UnionInteractor;
 use Apie\Console\Helpers\UploadedFileInteractor;
@@ -48,6 +49,7 @@ final class ApieInputHelper extends Helper
             new NullInteractor(),
             new NumberInteractor(),
             new BooleanInteractor(),
+            new PolymorphicObjectInteractor(),
             new DefaultObjectInteractor()
         ]);
     }
