@@ -3,8 +3,10 @@ namespace Apie\Console\Helpers;
 
 use Apie\Console\ApieInputHelper;
 use Apie\Core\Context\ApieContext;
+use Apie\Core\Context\MetadataFieldHashmap;
 use Apie\Core\Metadata\CompositeMetadata;
 use Apie\Core\Metadata\Fields\DiscriminatorColumn;
+use Apie\Core\Metadata\Fields\FieldInterface;
 use Apie\Core\Metadata\MetadataFactory;
 use Apie\Core\Metadata\MetadataInterface;
 use Apie\Core\Utils\ConverterUtils;
@@ -44,20 +46,41 @@ class PolymorphicObjectInteractor extends DefaultObjectInteractor implements Inp
 
         $list = EntityUtils::getDiscriminatorClasses($class)->toStringArray();
         $question = new ChoiceQuestion('Pick a value: ', array_combine($list, $list));
-        $result = $helper->ask($input, $output, $question);
+        $result = ConverterUtils::toReflectionClass($helper->ask($input, $output, $question));
         $output->writeln('');
 
         $childMetadata = MetadataFactory::getCreationMetadata(
-            ConverterUtils::toReflectionClass($result),
+            $result,
             $context
         );
+        assert($childMetadata instanceof CompositeMetadata);
+        $columns = [];
+        $filteredMap = array_filter(
+            $childMetadata->getHashmap()->toArray(),
+            function (FieldInterface $field, string $propertyName) use (&$columns, $result) {
+                if ($field instanceof DiscriminatorColumn) {
+                    $columns[$propertyName] = $field->getValueForClass($result);
+                    return false;
+                }
 
-        return parent::interactWith(
-            $childMetadata,
-            $helperSet,
-            $input,
-            $output,
-            $context
+                return true;
+            },
+            ARRAY_FILTER_USE_BOTH 
+        );
+        $childMetadata = new CompositeMetadata(
+            new MetadataFieldHashmap($filteredMap),
+            $childMetadata->toClass()
+        );
+
+        return array_merge(
+            $columns,
+            parent::interactWith(
+                $childMetadata,
+                $helperSet,
+                $input,
+                $output,
+                $context
+            )
         );
     }
 }
