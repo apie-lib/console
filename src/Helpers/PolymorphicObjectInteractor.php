@@ -65,7 +65,7 @@ class PolymorphicObjectInteractor extends DefaultObjectInteractor implements Inp
 
                 return true;
             },
-            ARRAY_FILTER_USE_BOTH 
+            ARRAY_FILTER_USE_BOTH
         );
         $childMetadata = new CompositeMetadata(
             new MetadataFieldHashmap($filteredMap),
