@@ -135,7 +135,7 @@ abstract class ApieMetadataDirectedConsoleCommand extends Command
             $apieContext = $apieContext->withContext(ContextConstants::RESOURCE_ID, $id);
             try {
                 $resource = $apieContext->getContext(ApieDatalayer::class)->find(
-                    IdentifierUtils::entityClassToIdentifier($this->reflectionClass)->newInstance($id),
+                    IdentifierUtils::idStringToIdentifier($id, $apieContext),
                     $apieContext->getContext(BoundedContext::class)->getId()
                 );
             } catch (Exception $exception) {
