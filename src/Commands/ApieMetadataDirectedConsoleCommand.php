@@ -11,7 +11,6 @@ use Apie\Core\ContextConstants;
 use Apie\Core\Datalayers\ApieDatalayer;
 use Apie\Core\Entities\EntityInterface;
 use Apie\Core\IdentifierUtils;
-use Apie\Core\Metadata\Fields\DiscriminatorColumn;
 use Apie\Core\Metadata\Fields\FieldInterface;
 use Apie\Core\Metadata\Fields\FieldWithPossibleDefaultValue;
 use Apie\Core\Metadata\MetadataInterface;
@@ -136,7 +135,7 @@ abstract class ApieMetadataDirectedConsoleCommand extends Command
             $apieContext = $apieContext->withContext(ContextConstants::RESOURCE_ID, $id);
             try {
                 $resource = $apieContext->getContext(ApieDatalayer::class)->find(
-                    IdentifierUtils::entityClassToIdentifier($this->reflectionClass)->newInstance($id),
+                    IdentifierUtils::idStringToIdentifier($id, $apieContext),
                     $apieContext->getContext(BoundedContext::class)->getId()
                 );
             } catch (Exception $exception) {
