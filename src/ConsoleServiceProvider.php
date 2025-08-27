@@ -46,6 +46,25 @@ class ConsoleServiceProvider extends ServiceProvider
             }
         );
         $this->app->singleton(
+            \Apie\Console\ContextBuilders\ConsoleLoginContextBuilder::class,
+            function ($app) {
+                return new \Apie\Console\ContextBuilders\ConsoleLoginContextBuilder(
+                
+                );
+            }
+        );
+        \Apie\ServiceProviderGenerator\TagMap::register(
+            $this->app,
+            \Apie\Console\ContextBuilders\ConsoleLoginContextBuilder::class,
+            array(
+              0 =>
+              array(
+                'name' => 'apie.core.context_builder',
+              ),
+            )
+        );
+        $this->app->tag([\Apie\Console\ContextBuilders\ConsoleLoginContextBuilder::class], 'apie.core.context_builder');
+        $this->app->singleton(
             \Apie\Console\ApieInputHelper::class,
             function ($app) {
                 return \Apie\Console\ApieInputHelper::create(

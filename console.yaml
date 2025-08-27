@@ -20,6 +20,10 @@ services:
       - '@Apie\Console\ApieInputHelper'
       - '@Apie\Console\ConsoleCliStorage'
 
+  Apie\Console\ContextBuilders\ConsoleLoginContextBuilder:
+    tags:
+      - { name: 'apie.core.context_builder' }
+
   Apie\Console\ApieInputHelper:
     factory: ['Apie\Console\ApieInputHelper', 'create']
     arguments:
