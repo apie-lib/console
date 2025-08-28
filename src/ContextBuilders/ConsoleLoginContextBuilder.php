@@ -14,8 +14,6 @@ use Apie\Core\ValueObjects\Exceptions\InvalidStringForValueObjectException;
 
 class ConsoleLoginContextBuilder implements ContextBuilderInterface
 {
-
-
     public function process(ApieContext $context): ApieContext
     {
         $textEncrypter = $context->getContext(TextEncrypter::class, false);

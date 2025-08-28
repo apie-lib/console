@@ -60,6 +60,7 @@ class ConsoleServiceProvider extends ServiceProvider
               0 =>
               array(
                 'name' => 'apie.core.context_builder',
+                'priority' => -20,
               ),
             )
         );

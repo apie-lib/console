@@ -22,7 +22,7 @@ services:
 
   Apie\Console\ContextBuilders\ConsoleLoginContextBuilder:
     tags:
-      - { name: 'apie.core.context_builder' }
+      - { name: 'apie.core.context_builder', priority: -20 }
 
   Apie\Console\ApieInputHelper:
     factory: ['Apie\Console\ApieInputHelper', 'create']
