@@ -49,7 +49,7 @@ class ConsoleServiceProvider extends ServiceProvider
             \Apie\Console\ContextBuilders\ConsoleLoginContextBuilder::class,
             function ($app) {
                 return new \Apie\Console\ContextBuilders\ConsoleLoginContextBuilder(
-                
+                    $app->make(\Apie\Console\ConsoleCliStorage::class)
                 );
             }
         );

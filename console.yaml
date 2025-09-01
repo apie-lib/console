@@ -21,6 +21,8 @@ services:
       - '@Apie\Console\ConsoleCliStorage'
 
   Apie\Console\ContextBuilders\ConsoleLoginContextBuilder:
+    arguments:
+      - '@Apie\Console\ConsoleCliStorage'
     tags:
       - { name: 'apie.core.context_builder', priority: -20 }
 

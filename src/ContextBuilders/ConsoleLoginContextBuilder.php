@@ -9,20 +9,27 @@ use Apie\Core\Context\ApieContext;
 use Apie\Core\ContextBuilders\ContextBuilderInterface;
 use Apie\Core\ContextConstants;
 use Apie\Core\Datalayers\ApieDatalayer;
+use Apie\Core\Enums\ConsoleCommand;
 use Apie\Core\Exceptions\EntityNotFoundException;
 use Apie\Core\ValueObjects\Exceptions\InvalidStringForValueObjectException;
 
 class ConsoleLoginContextBuilder implements ContextBuilderInterface
 {
+    public function __construct(
+        private readonly ConsoleCliStorage $consoleCliStorage,
+    ) {
+    }
+
     public function process(ApieContext $context): ApieContext
     {
         $textEncrypter = $context->getContext(TextEncrypter::class, false);
         $apieDatalayer = $context->getContext(ApieDatalayer::class, false);
-        $cliStorage = $context->getContext(ConsoleCliStorage::class, false);
+        $cliStorage = $context->getContext(ConsoleCommand::CONSOLE_COMMAND->value, false);
         if (!$cliStorage || !$textEncrypter || !$apieDatalayer) {
             // Storage only available in apie/console
             return $context;
         }
+        $cliStorage = $this->consoleCliStorage;
         $authenticated = $cliStorage->restore('_APIE_AUTHENTICATED');
         if ($authenticated === null) {
             return $context;
