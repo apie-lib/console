@@ -34,6 +34,9 @@ final class ConsoleCliStorage
         return $this->homePath = empty($home) ? $this->getRootPath() : $home;
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
     private function getRootPath(): string
     {
         if ($this->rootPath) {

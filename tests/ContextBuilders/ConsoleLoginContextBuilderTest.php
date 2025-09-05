@@ -8,6 +8,7 @@ use Apie\Console\ConsoleCliStorage;
 use Apie\Console\ContextBuilders\ConsoleLoginContextBuilder;
 use Apie\Core\BoundedContext\BoundedContextId;
 use Apie\Core\Context\ApieContext;
+use Apie\Core\ContextConstants;
 use Apie\Core\Datalayers\ApieDatalayer;
 use Apie\Core\Exceptions\EntityNotFoundException;
 use Apie\Core\Other\MockFileWriter;
@@ -196,5 +197,48 @@ class ConsoleLoginContextBuilderTest extends TestCase
         $result = $builder->process($context);
         $this->assertSame($context, $result);
         $this->assertFalse($this->mockFileWriter->fileExists('/tmp/home/.apie-' . md5('/tmp/root..._APIE_AUTHENTICATED') . '-cli'));
+    }
+
+    #[Test]
+    public function happy_flow_logged_in_with_consoleclistorage()
+    {
+        $builder = new ConsoleLoginContextBuilder($this->cliStorage);
+        $context = new ApieContext();
+        $identifier = UserWithAddressIdentifier::createRandom();
+        $address = new AddressWithZipcodeCheck(
+            new DatabaseText('street'),
+            new DatabaseText('12'),
+            new DatabaseText('1234AB'),
+            new DatabaseText('city')
+        );
+        $entity = new UserWithAddress($address, $identifier);
+        $token = DecryptedAuthenticatedUser::createFromEntity(
+            $entity,
+            new BoundedContextId('ctx'),
+            time() + 3600
+        );
+        $this->mockFileWriter->writeFile('/tmp/home/.apie-' . md5('/tmp/root..._APIE_AUTHENTICATED') . '-cli', (string)$token);
+        $context = $context->withContext(TextEncrypter::class, new class {
+            public function decrypt($value)
+            {
+                return $value;
+            }
+        });
+        $context = $context->withContext(ApieDatalayer::class, new class($entity) {
+            private $entity;
+            public function __construct($entity)
+            {
+                $this->entity = $entity;
+            }
+            public function find($id, $contextId)
+            {
+                return $this->entity;
+            }
+        });
+        $result = $builder->process($context);
+        $this->assertNotSame($context, $result);
+        $this->assertSame($entity, $result->getContext(ContextConstants::AUTHENTICATED_USER));
+        $this->assertInstanceOf(DecryptedAuthenticatedUser::class, $result->getContext(DecryptedAuthenticatedUser::class));
+        $this->assertTrue($this->mockFileWriter->fileExists('/tmp/home/.apie-' . md5('/tmp/root..._APIE_AUTHENTICATED') . '-cli'));
     }
 }
