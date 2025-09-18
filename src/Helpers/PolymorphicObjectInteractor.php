@@ -7,6 +7,7 @@ use Apie\Core\Context\MetadataFieldHashmap;
 use Apie\Core\Metadata\CompositeMetadata;
 use Apie\Core\Metadata\Fields\DiscriminatorColumn;
 use Apie\Core\Metadata\Fields\FieldInterface;
+use Apie\Core\Metadata\Fields\StaticDiscriminatorColumn;
 use Apie\Core\Metadata\MetadataFactory;
 use Apie\Core\Metadata\MetadataInterface;
 use Apie\Core\Utils\ConverterUtils;
@@ -58,7 +59,7 @@ class PolymorphicObjectInteractor extends DefaultObjectInteractor implements Inp
         $filteredMap = array_filter(
             $childMetadata->getHashmap()->toArray(),
             function (FieldInterface $field, string $propertyName) use (&$columns, $result) {
-                if ($field instanceof DiscriminatorColumn) {
+                if ($field instanceof DiscriminatorColumn || $field instanceof StaticDiscriminatorColumn) {
                     $columns[$propertyName] = $field->getValueForClass($result);
                     return false;
                 }
