@@ -34,11 +34,9 @@ class ConsoleLoginContextBuilderTest extends TestCase
         $this->cliStorage = new ConsoleCliStorage($this->mockFileWriter);
         $ref = new ReflectionClass($this->cliStorage);
         $rootPathProp = $ref->getProperty('rootPath');
-        $rootPathProp->setAccessible(true);
         $this->originalRootPath = $rootPathProp->getValue($this->cliStorage);
         $rootPathProp->setValue($this->cliStorage, '/tmp/root');
         $homePathProp = $ref->getProperty('homePath');
-        $homePathProp->setAccessible(true);
         $this->originalHomePath = $homePathProp->getValue($this->cliStorage);
         $homePathProp->setValue($this->cliStorage, '/tmp/home');
     }
