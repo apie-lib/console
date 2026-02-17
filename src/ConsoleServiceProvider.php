@@ -14,7 +14,7 @@ class ConsoleServiceProvider extends ServiceProvider
 
     public function register()
     {
-        $this->app->singleton(
+        $this->registerSingleton(
             \Apie\Common\Wrappers\ConsoleCommandFactory::class,
             function ($app) {
                 return new \Apie\Common\Wrappers\ConsoleCommandFactory(
@@ -24,7 +24,7 @@ class ConsoleServiceProvider extends ServiceProvider
                 );
             }
         );
-        $this->app->singleton(
+        $this->registerSingleton(
             \Apie\Console\ConsoleCliStorage::class,
             function ($app) {
                 return new \Apie\Console\ConsoleCliStorage(
@@ -34,7 +34,7 @@ class ConsoleServiceProvider extends ServiceProvider
         );
         $this->app->bind('apie.console.factory', \Apie\Common\Wrappers\ConsoleCommandFactory::class);
         
-        $this->app->singleton(
+        $this->registerSingleton(
             \Apie\Console\ConsoleCommandFactory::class,
             function ($app) {
                 return new \Apie\Console\ConsoleCommandFactory(
@@ -45,7 +45,7 @@ class ConsoleServiceProvider extends ServiceProvider
                 );
             }
         );
-        $this->app->singleton(
+        $this->registerSingleton(
             \Apie\Console\ContextBuilders\ConsoleLoginContextBuilder::class,
             function ($app) {
                 return new \Apie\Console\ContextBuilders\ConsoleLoginContextBuilder(
@@ -65,7 +65,7 @@ class ConsoleServiceProvider extends ServiceProvider
             )
         );
         $this->app->tag([\Apie\Console\ContextBuilders\ConsoleLoginContextBuilder::class], 'apie.core.context_builder');
-        $this->app->singleton(
+        $this->registerSingleton(
             \Apie\Console\ApieInputHelper::class,
             function ($app) {
                 return \Apie\Console\ApieInputHelper::create(
