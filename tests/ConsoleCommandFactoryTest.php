@@ -13,6 +13,7 @@ use Apie\Fixtures\BoundedContextFactory;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 
 class ConsoleCommandFactoryTest extends TestCase
 {
@@ -25,7 +26,7 @@ class ConsoleCommandFactoryTest extends TestCase
         $apieContext = new ApieContext([]);
         $testItem = new ConsoleCommandFactory(
             $this->givenAnApieFacade(CreateObjectAction::class),
-            new ActionDefinitionProvider,
+            new ActionDefinitionProvider(new ServiceLocator([])),
             new ApieInputHelper(),
             new ConsoleCliStorage(new MockFileWriter())
         );
