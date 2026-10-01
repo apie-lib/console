@@ -14,4 +14,25 @@ This package is part of the [Apie](https://github.com/apie-lib) library.
 The code is maintained in a monorepo, so PR's need to be sent to the [monorepo](https://github.com/apie-lib/apie-lib-monorepo/pulls)
 
 ## Documentation
-This package is used internally in Apie or no documentation is available right now
+Runs Apie actions (defined in [apie/common](https://packagist.org/packages/apie/common)) as interactive Symfony Console commands, prompting for missing arguments and rendering the results on the CLI.
+
+### Standalone usage
+Install it with:
+```bash
+composer require apie/console
+```
+
+Construct `Apie\Console\ConsoleCommandFactory` with an `ApieFacade`, an `ActionDefinitionProvider`,
+an `Apie\Console\ApieInputHelper` and an `Apie\Console\ConsoleCliStorage` to turn Apie actions
+into `Symfony\Component\Console\Command\Command` instances. `ApieInputHelper` collects
+`Apie\Console\Helpers\InputInteractorInterface` implementations to interactively ask the user
+for each property of an action's input.
+
+### Symfony integration
+Via `apie/apie-bundle`, `console.yaml` registers `Apie\Console\ConsoleCommandFactory` as
+`apie.console.factory` and adds a `ConsoleLoginContextBuilder` so console commands run in an
+authenticated context. The generated commands are then available as regular `bin/console` commands.
+
+### Laravel integration
+Via `apie/laravel-apie`, the generated `Apie\Console\ConsoleServiceProvider` registers the same
+`ConsoleCommandFactory` and context builder so the Apie actions are exposed as Artisan commands.
