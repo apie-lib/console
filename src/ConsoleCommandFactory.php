@@ -64,7 +64,7 @@ class ConsoleCommandFactory
                 $resourceName = $actionDefinition->getResourceName();
                 $className = ApieModifyResourceCommand::class;
             }
-            if ($actionDefinition instanceof RunResourceMethodDefinition) {
+            if ($actionDefinition instanceof RunResourceMethodDefinition && empty($actionDefinition->getActionOptions())) {
                 $action = new RunItemMethodAction($this->apieFacade);
                 $resourceName = $actionDefinition->getResourceName();
                 $className = ApieRunResourceMethodCommand::class;
