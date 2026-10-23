@@ -14,6 +14,8 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\ServiceLocator;
+use Symfony\Component\Lock\LockFactory;
+use Symfony\Component\Lock\Store\NullStore;
 
 class ConsoleCommandFactoryTest extends TestCase
 {
@@ -23,7 +25,9 @@ class ConsoleCommandFactoryTest extends TestCase
     public function it_can_register_console_commands_for_a_bounded_context_and_run_it()
     {
         $boundedContext = BoundedContextFactory::createExample();
-        $apieContext = new ApieContext([]);
+        $apieContext = new ApieContext([
+            LockFactory::class => new LockFactory(new NullStore()),
+        ]);
         $testItem = new ConsoleCommandFactory(
             $this->givenAnApieFacade(CreateObjectAction::class),
             new ActionDefinitionProvider(new ServiceLocator([])),
