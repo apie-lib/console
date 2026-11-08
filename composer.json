@@ -23,7 +23,7 @@
     "php": ">=8.4",
     "apie/common": "self.version",
     "apie/core": "self.version",
-    "symfony/console": "^7.2"
+    "symfony/console": "^7.2|^8.0"
   },
   "require-dev": {
     "apie/fixtures": "self.version",
